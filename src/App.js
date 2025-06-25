@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import { ReactComponent as Logo } from "./logo.svg";
 import './App.css';
 // React
 import { useState, useEffect, useCallback } from "react";
@@ -7,14 +7,14 @@ import { Routes, Route, NavLink } from "react-router-dom";
 // api
 import api from './services/api';
 // Bootstrap components (navbar)
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
 // App screens
-import Home from './screens/Home';
+import Explore from './screens/Explore';
+import Trending from './screens/Trending';
+import Shop from './screens/Shop';
+import Auctions from './screens/Auctions';
 import Login from './screens/Login';
 import Register from './screens/Register';
-import Store from './screens/Store';
 
 function App() {
   const navigate = useNavigate();
@@ -33,48 +33,52 @@ function App() {
     <div>
       <Navbar
         expand="lg"
-        sticky="top"
-        className="navbar border-bottom border-light-subtle"
-        style={{ height: "10vh" }}
+        fixed="top"
+        className="navbar mx-4"
+        style={{ height: "12vh" }}
         data-bs-theme="light"
-        bg="light"
+      // bg="light"
       >
         <Container fluid>
           <Navbar.Brand>
-            <img
-              src={logo}
-              height="35vh"
-              alt="React Bootstrap logo"
-              onClick={() => navigate("/")}
-            />
-            <b>TradeBall</b>
+            <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse>
+          <Navbar.Collapse className="d-flex justify-content-center align-items-center">
             <Nav>
               <Nav.Link>
-                <NavLink to="/">HOME</NavLink>
+                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/">Explore</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink to="/store">STORE</NavLink>
+                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/trending">Trending</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink to="/login">LOGIN</NavLink>
+                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/shop">Shop</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink to="/register">REGISTER</NavLink>
+                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/auctions">Auctions</NavLink>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
+
+          <Button className="me-2 navbar-button rounded-pill"><Nav.Link>
+            <NavLink style={{ color: "white", textDecoration: "none" }} to="/login">Login</NavLink>
+          </Nav.Link></Button>
+          <Button className="mw-2 navbar-button rounded-pill"><Nav.Link>
+            <NavLink style={{ color: "white", textDecoration: "none" }} to="/register">Register</NavLink>
+          </Nav.Link></Button>
         </Container>
       </Navbar>
 
       <header>
         <Routes>
-          <Route path="/" element={<Home cards={cards} />}></Route>
-          <Route path="/store" element={<Store />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+
+          <Route path="/" element={<Explore cards={cards} />}></Route>
+          <Route path="/trending" element={<Login />}></Route>
+          <Route path="/shop" element={<Shop />}></Route>
+          <Route path="/auctions" element={<Login />}></Route>
 
           {/* error */}
           <Route path="*" element={<p>Not found</p>} />

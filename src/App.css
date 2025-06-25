@@ -6,15 +6,28 @@
   /* IE 10 and IE 11 */
   user-select: none;
   /* Standard syntax */
+  font-size: 14px;
+}
+
+.content {
+  overflow-x: auto;
+  overflow-y: scroll;
 }
 
 .hero-section {
-  padding-top: 25px;
+  padding-top: 10px;
+  background: white;
+  margin: 0px 250px;
 }
 
 .gradient-bg {
-  background: linear-gradient(180deg, rgb(174, 232, 255) 0%, rgba(255, 255, 255, 1) 100%);
-  height: 50vh;
+  background: #76BFC8;
+  height: 100vh;
+}
+
+.navbar-button {
+  background: linear-gradient(0deg, rgb(46.275% 74.902% 78.431%) 0%, rgb(46.19% 74.812% 78.341%) 6.25%, rgb(45.938% 74.54% 78.07%) 12.5%, rgb(45.516% 74.089% 77.618%) 18.75%, rgb(44.926% 73.456% 76.985%) 25%, rgb(44.168% 72.642% 76.172%) 31.25%, rgb(43.241% 71.648% 75.178%) 37.5%, rgb(42.146% 70.473% 74.003%) 43.75%, rgb(40.882% 69.118% 72.647%) 50%, rgb(39.45% 67.581% 71.111%) 56.25%, rgb(37.849% 65.864% 69.393%) 62.5%, rgb(36.08% 63.966% 67.495%) 68.75%, rgb(34.142% 61.887% 65.417%) 75%, rgb(32.036% 59.628% 63.157%) 81.25%, rgb(29.761% 57.188% 60.717%) 87.5%, rgb(27.318% 54.566% 58.096%) 93.75%, rgb(24.706% 51.765% 55.294%) 100%);
+  border-width: 0px !important;
 }
 
 /* CARD FLIPPING */
@@ -134,26 +147,18 @@
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.6;
+  filter: blur(175px);
+  /* opacity: 1; */
   mix-blend-mode: multiply;
   animation: float 20s infinite ease-in-out;
 }
 
-.blob.pink {
-  width: 40vw;
+.blob.purple {
+  width: 30vw;
   height: 40vw;
-  background: #ff86c6;
-  top: -25%;
-  left: -10%;
-}
-
-.blob.blue {
-  width: 25vw;
-  height: 25vw;
-  background: #7ab6ff;
-  top: 50%;
-  left: 80%;
+  background: rgba(110, 73, 107);
+  top: -65%;
+  left: 70%;
 }
 
 @keyframes float {

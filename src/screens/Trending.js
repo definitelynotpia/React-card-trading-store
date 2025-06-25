@@ -3,6 +3,6 @@ import "../App.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Store() {
+export default function Trending() {
     return (<></>);
 }

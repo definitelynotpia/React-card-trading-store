@@ -43,7 +43,8 @@ export default function Home({ cards }) {
         }));
     };
 
-    return (<div className="gradient-bg">
+    return (<div className="content gradient-bg">
+        <div className="blob purple"></div>
         <div className="hero-section">
 
             <div className="fan-layout">
