@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Routes, Route, NavLink } from "react-router-dom";
 // api
 import api from './services/api';
-// Bootstrap components (navbar)
+// components
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
 // App screens
 import Explore from './screens/Explore';

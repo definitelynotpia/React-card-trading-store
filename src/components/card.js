@@ -121,7 +121,7 @@ const CardInfo = ({ card }) => {
 
 const CardFront = ({ card }) => {
     return (
-        <Card className="border-0" style={{ width: "100%", height: "100%" }}>
+        <Card className="border-0" style={{ width: "100%", height: "100%", borderRadius: "0.58rem" }}>
             <Card.Img variant="top" src={card.images.large} alt={card.name} draggable="false" style={{ minHeight: "105%", borderRadius: "0.58rem", margin: "auto" }} />
             <div className="card-shadow"></div>
         </Card>
@@ -130,7 +130,7 @@ const CardFront = ({ card }) => {
 
 const CardBack = ({ card }) => {
     return (
-        <Card className="border-0" style={{ width: "100%", height: "100%" }}>
+        <Card className="border-0" style={{ width: "100%", height: "100%", borderRadius: "0.58rem" }}>
             <Card.Img variant="top" src="card-back.png" alt={card.name} draggable="false" style={{ minHeight: "105%", borderRadius: "0.58rem", margin: "auto" }} />
             <div className="card-shadow"></div>
         </Card>

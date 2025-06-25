@@ -4,37 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { playCardFlipSfx } from "../utils/sfx";
 import api from "../services/api";
 import { CardInfo, CardFront, CardBack } from "../components/card";
-import { Container, Col, Row, Card } from "react-bootstrap";
+import { Container, Col, Row, Card, Carousel } from "react-bootstrap";
+import FeaturedCarousel from "../components/featuredCarousel";
 
 export default function Home({ cards }) {
     // track card flipping
     const [flippedCards, setFlippedCards] = useState({});
     // set cursor mode on card hover
     const [grabbingCard, setGrabbingCard] = useState(null);
-    // shuffle cards for display in hero section
-    const [fanCards, setFanCards] = useState([]);
-    // loader to wait for fan display
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        api.get('/cards')
-            .then(res => {
-                const allCards = res.data.data;
-                const shuffled = [...allCards].sort(() => 0.5 - Math.random());
-                const randomFive = shuffled.slice(0, 5);
-                setFanCards(randomFive);
-            })
-            .catch(err => console.error('Error fetching cards:', err))
-            // show card front when loaded
-            .finally(() => setLoading(false));
-    }, []);
-
-
-    // Rotation settings
-    const totalCards = fanCards.length;
-    const maxRotation = 40; // degrees, total spread from left to right
-    const angleStep = totalCards > 1 ? maxRotation / (totalCards - 1) : 0;
-    const startAngle = -maxRotation / 2;
 
     const toggleFlip = (cardId) => {
         setFlippedCards(prev => ({
@@ -45,36 +22,17 @@ export default function Home({ cards }) {
 
     return (<div className="content gradient-bg">
         <div className="blob purple"></div>
+
         <div className="hero-section">
+            <FeaturedCarousel></FeaturedCarousel>
+            <div className="blob blue"></div>
+        </div>
+        <div className="hero-section-platform">
+            <img className="hero-section-pokemon jigglypuff" src="./assets/Pokemons/3D_Jigglypuff.webp" />
+            <img className="hero-section-pokemon pikachu flip-image" src="./assets/Pokemons/3D_Pikachu.png" />
+        </div>
 
-            <div className="fan-layout">
-                {fanCards.map((card, index) => {
-                    const rotation = startAngle + index * angleStep;
-                    const zIndex = fanCards.length - Math.abs(index - Math.floor(fanCards.length / 2));
-
-                    return (
-                        <div
-                            key={card.id}
-                            className="fan-card"
-                            style={{
-                                left: "50%",
-                                top: "50%",
-                                transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
-                                zIndex,
-                                "--rotation": `${rotation}deg`
-                            }}
-                        >
-
-                            <Card className="border-0" style={{ width: "100%", height: "100%" }}>
-                                <Card.Img variant="top" src={loading ? "card-back.png" : card.images.small} alt={card.name} draggable="false" />
-                                <div className="fan-card-shadow"></div>
-                            </Card>
-                        </div>
-                    );
-                })}
-            </div>
-
-
+        <div style={{ background: "white", paddingTop: "5vh" }}>
             <Container>
                 <Row>
                     {cards.slice(0, 16).map(card => (
