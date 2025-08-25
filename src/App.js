@@ -1,4 +1,4 @@
-import { ReactComponent as Logo } from "./logo.svg";
+import { ReactComponent as Logo } from "./logo-3.svg";
 import './App.css';
 // React
 import { useState, useEffect, useCallback } from "react";
@@ -19,12 +19,32 @@ import Register from './screens/Register';
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState(() => {
+    const saved = localStorage.getItem("fetchedCards");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // when page scrolled on Home page, change navbar bg (transparent -> solid color)
+  const [navbarBg, setNavbarBg] = useState(false);
+  useEffect(() => {
+    const changeNavbarBg = () => {
+      if (window.scrollY >= 50) {
+        setNavbarBg(true);
+      } else {
+        setNavbarBg(false);
+      }
+    };
+
+    // attach listener
+    window.addEventListener("scroll", changeNavbarBg);
+  }, []);
 
   useEffect(() => {
     api.get('/cards?pageSize=16')
       .then(res => {
-        setCards(res.data.data); // `data.data` is the actual card array
+        const fetchedCards = res.data.data;
+        setCards(fetchedCards); // `data.data` is the actual card array
+        localStorage.setItem("fetchedCards", JSON.stringify(fetchedCards));
       })
       .catch(err => console.error('Error fetching cards:', err));
   }, []);
@@ -32,15 +52,11 @@ function App() {
   return (
     <div>
       <Navbar
+        className={`navbar ${navbarBg ? "bg-white" : ""}`}
         expand="lg"
         fixed="top"
-        className="navbar"
-        style={{ height: "10vh" }}
-        data-bs-theme="light"
-      // bg="white"
+      // data-bs-theme="light"
       >
-        <div className="nav-bg" />
-        <div className="nav-center-bg" />
         <Container fluid className="mx-4">
           <Col>
             <Navbar.Brand>
@@ -52,26 +68,26 @@ function App() {
           <Col className="d-flex justify-content-center align-items-center">
             <Nav>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/">Explore</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/">Explore</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/trending">Trending</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/trending">Trending</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/shop">Shop</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/shop">Shop</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/auctions">Auctions</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/auctions">Auctions</NavLink>
               </Nav.Link>
             </Nav>
           </Col>
 
           <Col className="d-flex justify-content-end align-items-end">
             <Button className="me-3 rounded-pill" variant="dark"><Nav.Link>
-              <NavLink style={{ color: "white", textDecoration: "none" }} to="/login">Login</NavLink>
+              <NavLink className="text-white text-decoration-none" to="/login">Login</NavLink>
             </Nav.Link></Button>
             <Button className="mw-3 rounded-pill" variant="dark"><Nav.Link>
-              <NavLink style={{ color: "white", textDecoration: "none" }} to="/register">Register</NavLink>
+              <NavLink className="text-white text-decoration-none" to="/register">Register</NavLink>
             </Nav.Link></Button>
           </Col>
         </Container>

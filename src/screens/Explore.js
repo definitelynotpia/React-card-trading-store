@@ -26,7 +26,7 @@ export default function Home({ cards }) {
             <div className="blob blue"></div>
             <FeaturedCarousel></FeaturedCarousel>
             <img className="hero-section-pokemon jigglypuff" src="./assets/Pokemons/3D_Jigglypuff.webp" draggable="false" />
-            <img className="hero-section-pokemon pikachu flip-image" src="./assets/Pokemons/3D_Pikachu.png" draggable="false" />
+            <img id="hero-section-pokemon pikachu" className="hero-section-pokemon pikachu flip-image" src="./assets/Pokemons/3D_Pikachu.png" draggable="false" />
         </div>
 
         <div className="hero-section-platform">
