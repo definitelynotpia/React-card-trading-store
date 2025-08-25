@@ -7,7 +7,7 @@ import { Routes, Route, NavLink } from "react-router-dom";
 // api
 import api from './services/api';
 // components
-import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { Container, Nav, Navbar, Button, Col } from "react-bootstrap";
 // App screens
 import Explore from './screens/Explore';
 import Trending from './screens/Trending';
@@ -34,39 +34,46 @@ function App() {
       <Navbar
         expand="lg"
         fixed="top"
-        className="navbar mx-4"
-        style={{ height: "12vh" }}
+        className="navbar"
+        style={{ height: "10vh" }}
         data-bs-theme="light"
-      // bg="light"
+      // bg="white"
       >
-        <Container fluid>
-          <Navbar.Brand>
-            <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse className="d-flex justify-content-center align-items-center">
+        <div className="nav-bg" />
+        <div className="nav-center-bg" />
+        <Container fluid className="mx-4">
+          <Col>
+            <Navbar.Brand>
+              <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} />
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll" />
+          </Col>
+
+          <Col className="d-flex justify-content-center align-items-center">
             <Nav>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/">Explore</NavLink>
+                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/">Explore</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/trending">Trending</NavLink>
+                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/trending">Trending</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/shop">Shop</NavLink>
+                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/shop">Shop</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2" style={{ color: "#5AA1AA", textDecoration: "none" }} to="/auctions">Auctions</NavLink>
+                <NavLink className="mx-2" style={{ color: "black", textDecoration: "none" }} to="/auctions">Auctions</NavLink>
               </Nav.Link>
             </Nav>
-          </Navbar.Collapse>
+          </Col>
 
-          <Button className="me-2 navbar-button rounded-pill"><Nav.Link>
-            <NavLink style={{ color: "white", textDecoration: "none" }} to="/login">Login</NavLink>
-          </Nav.Link></Button>
-          <Button className="mw-2 navbar-button rounded-pill"><Nav.Link>
-            <NavLink style={{ color: "white", textDecoration: "none" }} to="/register">Register</NavLink>
-          </Nav.Link></Button>
+          <Col className="d-flex justify-content-end align-items-end">
+            <Button className="me-3 rounded-pill" variant="dark"><Nav.Link>
+              <NavLink style={{ color: "white", textDecoration: "none" }} to="/login">Login</NavLink>
+            </Nav.Link></Button>
+            <Button className="mw-3 rounded-pill" variant="dark"><Nav.Link>
+              <NavLink style={{ color: "white", textDecoration: "none" }} to="/register">Register</NavLink>
+            </Nav.Link></Button>
+          </Col>
         </Container>
       </Navbar>
 

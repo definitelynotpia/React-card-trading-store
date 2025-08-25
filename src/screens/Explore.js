@@ -21,18 +21,22 @@ export default function Home({ cards }) {
     };
 
     return (<div className="content gradient-bg">
-        <div className="blob purple"></div>
 
         <div className="hero-section">
-            <FeaturedCarousel></FeaturedCarousel>
             <div className="blob blue"></div>
-        </div>
-        <div className="hero-section-platform">
-            <img className="hero-section-pokemon jigglypuff" src="./assets/Pokemons/3D_Jigglypuff.webp" />
-            <img className="hero-section-pokemon pikachu flip-image" src="./assets/Pokemons/3D_Pikachu.png" />
+            <FeaturedCarousel></FeaturedCarousel>
+            <img className="hero-section-pokemon jigglypuff" src="./assets/Pokemons/3D_Jigglypuff.webp" draggable="false" />
+            <img className="hero-section-pokemon pikachu flip-image" src="./assets/Pokemons/3D_Pikachu.png" draggable="false" />
         </div>
 
-        <div style={{ background: "white", paddingTop: "5vh" }}>
+        <div className="hero-section-platform">
+            <h1 className="hero-section-text"><span className="gradient-text">Discover</span>,&nbsp;<span className="gradient-text">Collect</span>, and&nbsp;<span className="gradient-text">Buy</span></h1>
+            <h1 className="hero-section-text">Pokemon Cards&nbsp;<span className="gradient-text">Securely!</span></h1>
+        </div>
+
+
+
+        <div style={{ background: "white" }}>
             <Container>
                 <Row>
                     {cards.slice(0, 16).map(card => (
@@ -62,5 +66,5 @@ export default function Home({ cards }) {
                 </Row>
             </Container>
         </div>
-    </div>);
+    </div >);
 }
