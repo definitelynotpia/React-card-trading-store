@@ -40,6 +40,16 @@ export default function FeaturedCarousel() {
         }
     }, [fanCards]);
 
+    // autoplay carousel, pause on hover
+    const [paused, setPaused] = useState(false);
+    useEffect(() => {
+        if (paused) return;
+        const interval = setInterval(() => {
+            setIndex((prevIndex) => (prevIndex + 1) % visibleCards.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, [paused]);
+
     const visibleCards = [
         fanCards[(index + 2) % 3], // left
         fanCards[index],           // center
@@ -53,7 +63,9 @@ export default function FeaturedCarousel() {
     return (
         <Container className="d-flex justify-content-center">
             <Row className="row-auto d-flex justify-content-center align-items-center">
-                <div className="featured-carousel">
+                <div className="featured-carousel"
+                    onMouseEnter={() => setPaused(true)}
+                    onMouseLeave={() => setPaused(false)}>
                     {visibleCards.map((card, i) => {
                         // if card is 2nd, set in middle
                         const position = i === 1 ? 'center' : i === 0 ? 'left' : 'right';
@@ -66,8 +78,7 @@ export default function FeaturedCarousel() {
                                 className={`featured-card ${position} opacity-${opacity} ${grabbingCard === card.id ? 'grabbing' : ''}`}
                                 onClick={() => {
                                     if (i !== 1) playCardFlipSfx(); // play card flip sfx
-                                    if (i === 0) setIndex((index + 2) % 3); // move left
-                                    else if (i === 2) setIndex((index + 1) % 3); // move right
+                                    setIndex((prevIndex) => (prevIndex + 1) % fanCards.length);
                                 }}
                                 // change cursor appearance to grabbing when clicking
                                 onMouseDown={() => setGrabbingCard(card.id)}

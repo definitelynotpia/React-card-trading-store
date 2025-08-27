@@ -9,14 +9,51 @@
   font-size: 14px;
 }
 
-.flip-image {
-  -moz-transform: scaleX(-1);
-  -o-transform: scaleX(-1);
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-  filter: FlipH;
-  -ms-filter: "FlipH";
+.page {
+  min-height: 67.2vh;
 }
+
+.gradient-bg {
+  background: linear-gradient(to bottom, #77c0c9 0%, #74bbc4 100%);
+}
+
+.navbar {
+  height: 10vh;
+  transition: 0.2s ease-in;
+  background: transparent;
+}
+
+.nav-bg {
+  background: white !important;
+  box-shadow: #06535d2e 0px 0px 5px;
+}
+
+.navbar-btn {
+  font-size: 12px !important;
+}
+
+.outline-btn {
+  background: transparent !important;
+  border-color: black !important;
+}
+
+.outline-btn:hover {
+  background: #202020 !important;
+  border-color: black !important;
+}
+
+.outline-btn>*,
+.outline-btn>*>* {
+  color: black !important;
+  font-size: 12px !important;
+}
+
+/* When button is hovered, affect all its text inside */
+.outline-btn:hover>*,
+.outline-btn:hover>*>* {
+  color: white !important;
+}
+
 
 .hero-section {
   position: relative;
@@ -25,41 +62,16 @@
   background: white;
   margin: auto;
   width: 65vw;
-  height: 540px;
+  height: 480px;
   z-index: 1;
 }
 
-.hero-section-platform {
-  background: white;
-  clip-path: polygon(17.2% 0, 82.8% 0, 101% 100%, -1% 100%);
-  width: 100%;
-  height: auto;
-  /* make into container with padding */
-  padding: 2rem;
-  margin: -2px 0px;
-  text-align: center;
-  z-index: 0;
-}
-
-.hero-section-pokemon {
+.hero-anchored-text {
   position: absolute;
-  margin: 0px;
-  padding: 0px;
-  z-index: 2;
-}
-
-.hero-section-pokemon.jigglypuff {
-  width: 30%;
-  height: auto;
-  top: 70%;
-  left: -12%;
-}
-
-.hero-section-pokemon.pikachu {
-  width: 38%;
-  height: auto;
-  top: 50%;
-  left: 75%;
+  top: calc(120% + 5vw);
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 120%;
 }
 
 .hero-section-text {
@@ -73,6 +85,23 @@
   font-weight: bold;
 }
 
+.subtitle {
+  line-height: 1.2em;
+  height: 20px;
+}
+
+.custom-btn-color {
+  border-color: #73bec7 !important;
+  color: #73bec7 !important;
+  background: white !important;
+}
+
+.custom-btn-color:hover {
+  border-color: #73bec7 !important;
+  color: white !important;
+  background: #73bec7 !important;
+}
+
 /* GRADIENT TEXT MASKING */
 .gradient-text {
   background: linear-gradient(to bottom, #235D64 0%, #70B8C1 100%);
@@ -83,13 +112,41 @@
   font-weight: bold;
 }
 
-/* FEATURED CARD CAROUSEL */
-.carousel-controller {
-  background: transparent !important;
-  font-size: 2vw !important;
-  border-width: 0px !important;
+/* HERO SECTION IMAGES */
+.hero-section-platform {
+  position: relative;
+  border-bottom: 10vw solid white;
+  border-left: 17vw solid transparent;
+  border-right: 17vw solid transparent;
+  overflow: visible;
 }
 
+.hero-section-pokemon {
+  position: absolute;
+  margin: 0px;
+  padding: 0px;
+  z-index: 1;
+}
+
+.hero-section-pokemon.jigglypuff {
+  width: 30%;
+  transform: translateY(-50%);
+  left: -15%;
+}
+
+.hero-section-pokemon.pikachu {
+  width: 36%;
+  left: 74%;
+  /* flip image */
+  -moz-transform: scaleX(-1) translateY(-80%);
+  -o-transform: scaleX(-1) translateY(-80%);
+  -webkit-transform: scaleX(-1) transla8eY(-80%);
+  transform: scaleX(-1) translateY(-80%);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+/* FEATURED CARD CAROUSEL */
 .featured-carousel {
   margin-top: 120px !important;
   position: relative;
@@ -121,6 +178,17 @@
   width: 12vw;
 }
 
+.featured-card-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 0.6rem;
+  box-shadow: rgba(7, 7, 113, 0.15) 0px 13px 27px -5px, rgba(4, 10, 91, 0.102) 0px 0px 40px -5px;
+}
+
 /* Position modifiers */
 .featured-card.left {
   transform: translateX(-150%) scale(1.1);
@@ -135,17 +203,6 @@
 .featured-card.right {
   transform: translateX(50%) scale(1.1);
   z-index: 0;
-}
-
-.featured-card-shadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  border-radius: 0.6rem;
-  box-shadow: rgba(7, 7, 113, 0.15) 0px 13px 27px -5px, rgba(4, 10, 91, 0.2) 0px 0px 40px -5px;
 }
 
 /* featured auction details */
@@ -193,19 +250,104 @@
   padding: 0px !important;
 }
 
-.gradient-bg {
-  background: #76BFC8;
-  height: 100vh;
+/* SERVICES */
+.services-list {
+  padding: 8% 5% 4% 5%;
+  background: white;
 }
 
-.navbar {
-  height: 10vh;
-  transition: 0.4s ease-in;
-  background: transparent;
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: 28px;
 }
 
-.nav-bg {
-  background: white !important;
+.service-card {
+  display: flex;
+  width: 450px !important;
+  height: 200px !important;
+  padding: 26px;
+  margin-bottom: 10px;
+  border-radius: 25px !important;
+  border: black solid 1px !important;
+  box-shadow: 0px 4px 0px 0px black;
+}
+
+.service-card.white {
+  background: #f3f3f3;
+  color: black;
+}
+
+.service-card.blue {
+  background: #76bfc8;
+  color: black;
+}
+
+.service-card.black {
+  background: #191a23;
+  color: white;
+}
+
+.service-desc {
+  height: 100%;
+}
+
+.service-title {
+  width: auto;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.highlight-white {
+  padding: 2px 4px 6px 4px;
+  border-radius: 5px;
+  background: #76bfc8;
+}
+
+.highlight-blue {
+  padding: 2px 4px 6px 4px;
+  border-radius: 5px;
+  background: #f3f3f3;
+}
+
+.highlight-black {
+  padding: 2px 4px 6px 4px;
+  border-radius: 5px;
+  background: #f3f3f3;
+  color: black;
+}
+
+.service-title {
+  width: auto;
+  font-size: 18px;
+  line-height: 31px;
+  font-weight: 500;
+  padding: 2px 4px 6px 4px;
+  border-radius: 5px;
+}
+
+.service-title>.highlight-white {
+  background: #76bfc8;
+}
+
+.service-title>.highlight-blue {
+  background: #f3f3f3;
+}
+
+.service-title>.highlight-black {
+  background: #f3f3f3;
+  color: black;
+}
+
+.service-subtitle {
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.service-card-btn {
+  border: none !important;
+  background: transparent !important;
 }
 
 /* CARD FLIPPING */
@@ -263,6 +405,31 @@
   pointer-events: none;
   border-radius: 0.58rem;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+/* FOOTER */
+footer {
+  background: black;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  color: white;
+}
+
+.footer-desc {
+  text-align: justify;
+  font-size: 12px;
+}
+
+.footer-links>* {
+  font-size: 12px;
+  margin: 10px 0px;
+  color: gray;
+}
+
+.footer-links>*:hover {
+  font-size: 12px;
+  margin: 10px 0px;
+  color: #77c0c9;
 }
 
 /* BLURRED ELLIPSE */
