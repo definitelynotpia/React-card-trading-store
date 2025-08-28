@@ -11,9 +11,8 @@ import api from './services/api';
 // components
 import { Container, Nav, Navbar, Dropdown, Button, Row, Col } from "react-bootstrap";
 // App screens
+import Home from "./screens/Home";
 import Explore from './screens/Explore';
-import Trending from './screens/Trending';
-import Shop from './screens/Shop';
 import Auctions from './screens/Auctions';
 import Login from './screens/Login';
 import Register from './screens/Register';
@@ -47,9 +46,14 @@ function App() {
       .catch(err => console.error('Error fetching cards:', err));
   }, []);
 
-  // toggle state of temp auth
   const handleAuthToggle = () => {
-    setIsLogin((prev) => !prev);
+    setIsLogin((prev) => {
+      // toggle state of temp auth
+      const authState = !prev;
+      // state persistence of user auth (simulation only)
+      localStorage.setItem("isLogin", authState); // persist
+      return authState;
+    });
     navigate("/");
   };
 
@@ -63,7 +67,7 @@ function App() {
         <Container fluid className="mx-4">
           <Col>
             <Navbar.Brand>
-              <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} />
+              <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} className="clickable-image m-0 p-0" />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
           </Col>
@@ -71,7 +75,7 @@ function App() {
           <Col>
             <Nav className="d-flex justify-content-center align-items-center">
               <Nav.Link>
-                <NavLink className="mx-2 text-black text-decoration-none" to="/">Explore</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/explore">Explore</NavLink>
               </Nav.Link>
               <Nav.Link>
                 <NavLink className="mx-2 text-black text-decoration-none" to="/auctions">Auctions</NavLink>
@@ -118,10 +122,9 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
 
-          <Route path="/" element={<Explore cards={cards} />}></Route>
-          <Route path="/trending" element={<Login />}></Route>
-          <Route path="/shop" element={<Shop />}></Route>
-          <Route path="/auctions" element={<Login />}></Route>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/explore" element={<Explore cards={cards} />}></Route>
+          <Route path="/auctions" element={<Auctions />}></Route>
 
           {/* error */}
           <Route path="*" element={<p>Not found</p>} />
