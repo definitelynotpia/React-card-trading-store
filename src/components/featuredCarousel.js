@@ -10,8 +10,8 @@ import { Container, Col, Row, Button, Card } from "react-bootstrap";
 export default function FeaturedCarousel() {
     // set cursor mode on card hover
     const [grabbingCard, setGrabbingCard] = useState(null);
-    const [fanCards, setFanCards] = useState(() => {
-        const saved = localStorage.getItem("fanCards");
+    const [featuredCards, setFeaturedCards] = useState(() => {
+        const saved = localStorage.getItem("featuredCards");
         return saved ? JSON.parse(saved) : [];
     });
     const [index, setIndex] = useState(0); // active center card
@@ -26,19 +26,19 @@ export default function FeaturedCarousel() {
     }, []);
 
     useEffect(() => {
-        if (fanCards.length === 0) {
+        if (featuredCards.length === 0) {
             api.get('/cards')
                 .then(res => {
                     const allCards = res.data.data;
                     const shuffled = [...allCards].sort(() => 0.5 - Math.random());
                     const selected = shuffled.slice(0, 3);
 
-                    setFanCards(selected);
-                    localStorage.setItem("fanCards", JSON.stringify(selected));
+                    setFeaturedCards(selected);
+                    localStorage.setItem("featuredCards", JSON.stringify(selected));
                 })
                 .catch(err => console.error('Error:', err));
         }
-    }, [fanCards]);
+    }, [featuredCards]);
 
     // autoplay carousel, pause on hover
     const [paused, setPaused] = useState(false);
@@ -51,12 +51,12 @@ export default function FeaturedCarousel() {
     }, [paused]);
 
     const visibleCards = [
-        fanCards[(index + 2) % 3], // left
-        fanCards[index],           // center
-        fanCards[(index + 1) % 3], // right
+        featuredCards[(index + 2) % 3], // left
+        featuredCards[index],           // center
+        featuredCards[(index + 1) % 3], // right
     ];
 
-    if (fanCards.length < 3) {
+    if (featuredCards.length < 3) {
         return <div>Loading cards...</div>;
     }
 
@@ -78,7 +78,7 @@ export default function FeaturedCarousel() {
                                 className={`featured-card ${position} opacity-${opacity} ${grabbingCard === card.id ? 'grabbing' : ''}`}
                                 onClick={() => {
                                     if (i !== 1) playCardFlipSfx(); // play card flip sfx
-                                    setIndex((prevIndex) => (prevIndex + 1) % fanCards.length);
+                                    setIndex((prevIndex) => (prevIndex + 1) % featuredCards.length);
                                 }}
                                 // change cursor appearance to grabbing when clicking
                                 onMouseDown={() => setGrabbingCard(card.id)}
@@ -112,6 +112,11 @@ export default function FeaturedCarousel() {
                                             </Col>
                                         </Row>
 
+                                        <Button className="m-0 py-1 blue-outline-btn align-self-center" style={{scale: "0.8"}} onClick={(event) => {
+                                            event.stopPropagation(); // prevent carousel next
+                                            // insert redirect here
+                                        }}>View Card</Button>
+
                                         <div className="featured-card-shadow"></div>
                                     </Card>
 
@@ -125,7 +130,6 @@ export default function FeaturedCarousel() {
                                             <Col className="col-auto auction-content">00h 00m 00s</Col>
                                         </Row>
                                     </Container>
-
                                 </Card>
 
                             </div>

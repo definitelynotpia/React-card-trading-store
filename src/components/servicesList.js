@@ -57,8 +57,8 @@ export default function Services() {
 						<Row className="h-100">
 							<Col className="service-desc d-flex flex-column justify-content-between align-items-start w-50">
 								<p>
-									{card.title.map((line, idx) => (
-										<><span key={idx} className={`service-title ${card.highlightColor}`}>{line}</span><br /></>
+									{card.title.map((line, id) => (
+										<><span key={id} className={`service-title ${card.highlightColor}`}>{line}</span><br /></>
 									))}
 								</p>
 								<p className="service-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum semper diam vitae libero feugiat.</p>

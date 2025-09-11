@@ -12,8 +12,8 @@ export default function Home() {
 				<div className="blob blue"></div>
 				<FeaturedCarousel></FeaturedCarousel>
 				<div className="hero-anchored-text">
-					<h1 className="hero-section-text"><span className="gradient-text">Discover</span>,&nbsp;<span className="gradient-text">Collect</span>, and&nbsp;<span className="gradient-text">Buy</span></h1>
-					<h1 className="hero-section-text">Pokemon Cards&nbsp;<span className="gradient-text">Securely!</span></h1>
+					<h1 className="hero-section-text"><span className="gradient-text h1">Discover</span>,&nbsp;<span className="gradient-text h1">Collect</span>, and&nbsp;<span className="gradient-text h1">Buy</span></h1>
+					<h1 className="hero-section-text">Pokemon Cards&nbsp;<span className="gradient-text h1">Securely!</span></h1>
 					<Row className="subtitle-section d-flex justify-content-center align-items-center pt-3">
 						<Col className="col-auto p-0 m-0 align-self-center">
 							<p className="subtitle">A trusted hub for the Pokemon<br />community. Gotta catch 'em all!</p>

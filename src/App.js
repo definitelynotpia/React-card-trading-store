@@ -13,7 +13,6 @@ import { Container, Nav, Navbar, Dropdown, Button, Row, Col } from "react-bootst
 // App screens
 import Home from "./screens/Home";
 import Explore from './screens/Explore';
-import Auctions from './screens/Auctions';
 import Login from './screens/Login';
 import Register from './screens/Register';
 
@@ -23,7 +22,19 @@ function App() {
   // temp auth
   const [isLogin, setIsLogin] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
-  // fetch cards from api or memory
+  // fetch data and cards from api or memory
+  const [rarities, setRarities] = useState(() => {
+    const saved = localStorage.getItem("fetchedCardRarities");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [types, setTypes] = useState(() => {
+    const saved = localStorage.getItem("fetchedCardTypes");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [sets, setSets] = useState(() => {
+    const saved = localStorage.getItem("fetchedCardSets");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [cards, setCards] = useState(() => {
     const saved = localStorage.getItem("fetchedCards");
     return saved ? JSON.parse(saved) : [];
@@ -36,6 +47,7 @@ function App() {
     window.addEventListener("scroll", changeNavbarBg);
   }, []);
 
+  // get 16 cards
   useEffect(() => {
     api.get('/cards?pageSize=16')
       .then(res => {
@@ -46,6 +58,35 @@ function App() {
       .catch(err => console.error('Error fetching cards:', err));
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [raritiesRes, typesRes, setsRes] = await Promise.all([
+          api.get("/rarities"),
+          api.get("/types"),
+          api.get("/sets"),
+        ]);
+
+        // rarities
+        const fetchedCardRarities = raritiesRes.data.data || raritiesRes.data;
+        setRarities(raritiesRes.data.data || raritiesRes.data);
+        localStorage.setItem("fetchedCardRarities", JSON.stringify(fetchedCardRarities));
+        // types
+        const fetchedCardTypes = typesRes.data.data || typesRes.data;
+        setTypes(typesRes.data.data || typesRes.data);
+        localStorage.setItem("fetchedCardTypes", JSON.stringify(fetchedCardTypes));
+        // sets
+        const fetchedCardSets = setsRes.data.data || setsRes.data;
+        setSets(setsRes.data.data || setsRes.data);
+        localStorage.setItem("fetchedCardSets", JSON.stringify(fetchedCardSets));
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // login logout
   const handleAuthToggle = () => {
     setIsLogin((prev) => {
       // toggle state of temp auth
@@ -75,10 +116,10 @@ function App() {
           <Col>
             <Nav className="d-flex justify-content-center align-items-center">
               <Nav.Link>
-                <NavLink className="mx-2 text-black text-decoration-none" to="/explore">Explore</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/">Home</NavLink>
               </Nav.Link>
               <Nav.Link>
-                <NavLink className="mx-2 text-black text-decoration-none" to="/auctions">Auctions</NavLink>
+                <NavLink className="mx-2 text-black text-decoration-none" to="/explore">Explore</NavLink>
               </Nav.Link>
             </Nav>
           </Col>
@@ -124,7 +165,7 @@ function App() {
 
           <Route path="/" element={<Home />}></Route>
           <Route path="/explore" element={<Explore cards={cards} />}></Route>
-          <Route path="/auctions" element={<Auctions />}></Route>
+          <Route path="/explore/:id" element={<Explore cards={cards} />}></Route>
 
           {/* error */}
           <Route path="*" element={<p>Not found</p>} />

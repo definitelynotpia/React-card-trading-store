@@ -13,7 +13,8 @@
 
 .content {
   padding-top: 15vh;
-  margin: 0px 160px;
+  padding-bottom: 10vh;
+  margin: 0px 100px;
 }
 
 /* Blue gradient bg */
@@ -65,15 +66,16 @@
 
 /* Custom blue outline button */
 .blue-outline-btn {
-  border-color: #3F848D !important;
+  border-color: #70B8C1 !important;
   color: #3F848D !important;
   background: white !important;
 }
 
 .blue-outline-btn:hover {
-  border-color: #73bec7 !important;
+  border-color: #70B8C1 !important;
   color: white !important;
-  background: #73bec7 !important;
+  background: linear-gradient(to bottom, #91d8e1 0%, #70B8C1 100%) !important;
+  /* background: #73bec7 !important; */
 }
 
 /* Custom blue solid button */
@@ -95,8 +97,15 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-weight: bold !important;
+}
+
+.gradient-text.h1 {
   font-size: 45px !important;
-  font-weight: bold;
+}
+
+.gradient-text.h2 {
+  font-size: 36px !important;
 }
 
 .gradient-image {
@@ -106,6 +115,34 @@
   -webkit-text-fill-color: transparent !important;
 }
 
+/* CUSTOM TAB FOR PRODUCTS */
+.tab {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 4px 10px;
+  color: #3F848D !important;
+  border: #73bec7 solid 1px !important;
+  border-radius: 6px;
+}
+
+.tab:hover {
+  color: #3F848D !important;
+  background: rgb(233, 233, 233);
+}
+
+.tab.active {
+  color: white !important;
+  background: linear-gradient(to bottom, #6ab6bf 0%, #91d8e1 100%) !important;
+}
+
+/* FILTER OPTIONS */
+.filter-options {
+  background: white !important;
+  color: gray !important;
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  border-color: lightgray !important;
+}
 
 /* CARD FLIPPING */
 .flip-card {
