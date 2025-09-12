@@ -1,19 +1,25 @@
 import "../App.css";
 import "../styles/explore.css";
 // icons
-import { RiMenuSearchLine } from 'react-icons/ri';
 import { CgPokemon } from "react-icons/cg";
 // utils
 import GradientIcon from "../utils/gradientIcons.js";
-import useCardFilters from "../utils/pokemonTcgData.js"
 // react
 import { useState } from "react";
 // components
 import Products from "../components/productsList.js";
 import { Dropdown } from "react-bootstrap";
+// api
+import { useRarities, useTypes, useSupertypes, useSubtypes, useSets } from "../services/pokemonQueries.js";
 
-export default function Explore({ cards }) {
-    const filterList = useCardFilters();
+export default function Explore() {
+    // const filterList = useCardFilters();
+    const { data: rarities = [] } = useRarities();
+    const { data: sets = [] } = useSets();
+    const { data: types = [] } = useTypes();
+    const { data: supertypes = [] } = useSupertypes();
+    const { data: subtypes = [] } = useSubtypes();
+
     // set current tab
     const [activeTab, setActiveTab] = useState("singles");
     const tabList = [
@@ -35,13 +41,24 @@ export default function Explore({ cards }) {
         }
     ];
 
+    if (!sets && !types && !supertypes && !subtypes && !rarities) { return (<>Loading filters...</>) }
+
+    const filterList = [
+        { text: "Card Set", list: sets },
+        { text: "Condition", list: ["Mint", "Secondhand"] },
+        { text: "Card Type", list: types },
+        { text: "Card Supertype", list: supertypes },
+        { text: "Card Subtype", list: subtypes },
+        { text: "Rarity", list: rarities },
+    ];
+
     return (<div className="content">
-        <div className="d-flex flex-row align-items-center my-3">
-            <GradientIcon size={35} Icon={RiMenuSearchLine} />
-            <h1 className="gradient-text h2 ms-1">Explore</h1>
+        <div className="d-flex flex-row justify-content-center align-items-center my-3">
+            <GradientIcon size={40} Icon={CgPokemon} />
+            <h1 className="gradient-text h2 ms-2">Explore Cards</h1>
         </div>
 
-        <div className="tab-container d-flex justify-content-start align-items-center align-self-center my-2">
+        <div className="tab-container d-flex justify-content-center align-items-center align-self-center my-2">
             {tabList.map((tab, id) => (
                 <div
                     key={tab.eventKey}
@@ -54,34 +71,36 @@ export default function Explore({ cards }) {
             ))}
         </div>
 
-        <div className="d-flex flex-row justify-content-start align-items-center my-3">
+        <div className="d-flex flex-row justify-content-center align-items-center my-3">
             {filterList.map((filterItem, id) => (
                 <Dropdown key={id} >
-                    <Dropdown.Toggle className={`filter-options ${id !== filterList.lastIndexOf ? "me-3" : ""}`}>
+                    <Dropdown.Toggle className={`filter-options ${id !== filterList.lastIndexOf ? "me-2" : ""}`}>
                         {filterItem.text}
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu className="filter-list-container">
-                        {filterItem.list.map((item, i) => {
-                            console.log(item.name || item);
+                    <Dropdown.Menu style={{background: "#ffffffff"}}>
+                        {filterItem.list.length > 10 && <><input className="filter-search" placeholder="test" /></>}
+                        <div className="filter-list-container">
+                            {filterItem.list.map((item, i) => {
+                            if (filterItem.list.length < 1) {
+                                return (<Dropdown.Item className="filter-list-item">
+                                    Loading...
+                                </Dropdown.Item>);
+                            }
                             return (
                                 <Dropdown.Item key={i} className="filter-list-item">
                                     {item.name || item}
                                 </Dropdown.Item>
                             );
                         })}
+                        </div>
                     </Dropdown.Menu>
                 </Dropdown>
             ))}
         </div>
 
-        <div className="tab-content mx-4">
-            <div className="d-flex flex-row align-items-center my-3">
-                <GradientIcon size={35} Icon={CgPokemon} />
-                <h1 className="gradient-text h2 ms-1">Featured Cards</h1>
-            </div>
-
-            <Products cards={cards} />
+        <div className="tab-content mt-5">
+            <Products />
         </div>
     </div >);
 }

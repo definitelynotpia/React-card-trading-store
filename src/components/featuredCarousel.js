@@ -1,64 +1,97 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { playCardFlipSfx } from "../utils/sfx";
+import { CardBack } from "./card";
 // api
-import api from "../services/api";
+import { useCards } from "../services/pokemonQueries";
 import { generateAvatar } from "../utils/avatar";
 // bootstrap
 import { Container, Col, Row, Button, Card } from "react-bootstrap";
 
 export default function FeaturedCarousel() {
-    // set cursor mode on card hover
+    // query cards
+    const { data: featuredCards = [], isLoading, isError, error } = useCards(3);
+
+    // carousel ui states
     const [grabbingCard, setGrabbingCard] = useState(null);
-    const [featuredCards, setFeaturedCards] = useState(() => {
-        const saved = localStorage.getItem("featuredCards");
-        return saved ? JSON.parse(saved) : [];
-    });
     const [index, setIndex] = useState(0); // active center card
+    const [paused, setPaused] = useState(false);
+    const [visibleCards, setVisibleCards] = useState([]);
 
+    // placeholder avatar
     const [avatarSvg, setAvatarSvg] = useState(null);
-
     useEffect(() => {
         generateAvatar().then((svg) => {
-            console.log("Generated SVG:", svg); // Check if this logs valid SVG
             if (svg) setAvatarSvg(svg);
         });
     }, []);
 
     useEffect(() => {
-        if (featuredCards.length === 0) {
-            api.get('/cards')
-                .then(res => {
-                    const allCards = res.data.data;
-                    const shuffled = [...allCards].sort(() => 0.5 - Math.random());
-                    const selected = shuffled.slice(0, 3);
-
-                    setFeaturedCards(selected);
-                    localStorage.setItem("featuredCards", JSON.stringify(selected));
-                })
-                .catch(err => console.error('Error:', err));
+        if (featuredCards.length >= 3) {
+            setVisibleCards([
+                featuredCards[(index + 2) % 3], // left
+                featuredCards[index],           // center
+                featuredCards[(index + 1) % 3], // right
+            ]);
         }
-    }, [featuredCards]);
+    }, [featuredCards, index]);
 
     // autoplay carousel, pause on hover
-    const [paused, setPaused] = useState(false);
     useEffect(() => {
-        if (paused) return;
+        // if paused or no cards, do not play
+        if (paused || visibleCards.length === 0) return;
+        // else, cycle through cards by interval
         const interval = setInterval(() => {
             setIndex((prevIndex) => (prevIndex + 1) % visibleCards.length);
         }, 2500);
         return () => clearInterval(interval);
-    }, [paused]);
+    }, [paused, featuredCards.length, visibleCards.length]);
 
-    const visibleCards = [
-        featuredCards[(index + 2) % 3], // left
-        featuredCards[index],           // center
-        featuredCards[(index + 1) % 3], // right
-    ];
+    if (isLoading) {
+        return (<div>
+            {Array(3).fill(true).map((card, i) => {
+                // if card is 2nd, set in middle
+                const position = i === 1 ? 'center' : i === 0 ? 'left' : 'right';
+                // if card is not center, set opacity to 75%
+                const opacity = i === 1 ? 100 : 50;
 
-    if (featuredCards.length < 3) {
-        return <div>Loading cards...</div>;
+                return (<div
+                    className={`featured-card ${position} opacity-${opacity} ${grabbingCard === card.id ? 'grabbing' : ''}`}
+                    onClick={() => {
+                        if (i !== 1) playCardFlipSfx(); // play card flip sfx
+                        setIndex((prevIndex) => (prevIndex + 1) % featuredCards.length);
+                    }}
+                    // change cursor appearance to grabbing when clicking
+                    onMouseDown={() => setGrabbingCard(card.id)}
+                    onMouseUp={() => setGrabbingCard(null)}
+                    onMouseLeave={() => setGrabbingCard(null)} >
+
+                    <Card className="featured-card-outer"
+                        style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
+                    >
+                        <Card className="featured-card-inner" bg="light"
+                            style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
+                        >
+                            <Card.Img variant="top" src={CardBack} alt="Pokemon card back image"
+                                draggable="false" className={`img ${position}`}
+                                style={{ borderRadius: "0.6rem", margin: "auto" }}
+                            />
+
+                            <div className="featured-card-shadow"></div>
+                        </Card>
+
+                        <Container className="mt-3 mb-2">
+                            <h3>Creating magic for you...</h3>
+                            <h5>Please wait a moment.</h5>
+                        </Container>
+                    </Card>
+
+                </div>);
+            })}
+        </div>);
     }
+
+    if (isError) { return <div>Error: {error.message}</div>; }
 
     return (
         <Container className="d-flex justify-content-center">
@@ -70,7 +103,7 @@ export default function FeaturedCarousel() {
                         // if card is 2nd, set in middle
                         const position = i === 1 ? 'center' : i === 0 ? 'left' : 'right';
                         // if card is not center, set opacity to 75%
-                        const opacity = i === 1 ? 100 : 25;
+                        const opacity = i === 1 ? 100 : 50;
 
                         return (
                             <div
@@ -112,7 +145,7 @@ export default function FeaturedCarousel() {
                                             </Col>
                                         </Row>
 
-                                        <Button className="m-0 py-1 blue-outline-btn align-self-center" style={{scale: "0.8"}} onClick={(event) => {
+                                        <Button className="m-0 py-1 blue-outline-btn align-self-center" style={{ scale: "0.8" }} onClick={(event) => {
                                             event.stopPropagation(); // prevent carousel next
                                             // insert redirect here
                                         }}>View Card</Button>

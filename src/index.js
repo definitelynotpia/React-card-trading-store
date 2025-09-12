@@ -7,12 +7,34 @@ import reportWebVitals from './reportWebVitals';
 import "bootstrap/dist/css/bootstrap.min.css";
 // Router
 import { BrowserRouter as Router } from "react-router-dom";
+// state management
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
+  }
+});
+
+const persister = createAsyncStoragePersister({ storage: window.localStorage });
+
+persistQueryClient({
+  queryClient,
+  persister,
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
-      <App />
+      <QueryClientProvider client={queryClient} >
+        <App />
+      </QueryClientProvider>
     </Router>
   </React.StrictMode>
 );

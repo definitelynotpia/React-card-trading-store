@@ -1,7 +1,8 @@
 import "../App.css";
 import { Card, Badge, ListGroup } from 'react-bootstrap';
+import CardBackImage from "../assets/card-back.png";
 
-const typeIcons = {
+export const typeIcons = {
     Colorless: "card-icons/normal.png",
     Fire: "card-icons/fire.png",
     Water: "card-icons/water.png",
@@ -22,7 +23,7 @@ const typeIcons = {
     Fairy: "card-icons/fairy.png",
 };
 
-const CardInfo = ({ card }) => {
+export const CardInfo = ({ card }) => {
     return (
         <Card className="p-3" style={{ minHeight: '100%', border: 'none' }}>
             <Card.Title>{card.name} {card.level && <Badge bg="secondary">Lv. {card.level}</Badge>}</Card.Title>
@@ -119,7 +120,7 @@ const CardInfo = ({ card }) => {
     );
 };
 
-const CardFront = ({ card }) => {
+export const CardFront = ({ card }) => {
     return (
         <Card className="card-container border-0" >
             <Card.Img src={card.images.large} className="card-image m-0 p-0" alt={card.name} draggable="false" />
@@ -128,13 +129,11 @@ const CardFront = ({ card }) => {
     );
 };
 
-const CardBack = ({ card }) => {
+export const CardBack = ({ card }) => {
     return (
         <Card className="card-container border-0" >
-            <Card.Img src="card-back.png" className="card-image m-0 p-0" alt={card.name} draggable="false" />
+            <Card.Img src={CardBackImage} className="card-image m-0 p-0" alt={card.name} draggable="false" />
             <div className="card-shadow"></div>
         </Card>
     );
 };
-
-export { CardInfo, CardFront, CardBack };

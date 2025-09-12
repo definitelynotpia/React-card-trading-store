@@ -1,7 +1,7 @@
 import "../App.css";
 import "../styles/home.css";
 import * as Icon from "react-bootstrap-icons";
-import { Button, Container, Col, Row, Card, Carousel } from "react-bootstrap";
+import { Button, Col, Row, Card } from "react-bootstrap";
 
 export default function Services() {
 	const cards = [

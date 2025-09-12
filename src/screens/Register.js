@@ -1,7 +1,4 @@
 import "../App.css";
-// React
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function Register() {
     return (<></>);

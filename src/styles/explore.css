@@ -1,17 +1,55 @@
 .products-grid {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(auto-fill, 240px);
 	grid-template-rows: repeat(3, auto);
-	column-gap: 20px;
-	row-gap: 25px;
+	column-gap: 25px;
+	row-gap: 50px;
+	justify-content: center;
+	align-items: center;
 }
 
 .product-card {
 	display: flex;
 	flex-direction: column;
-	padding: 14px;
-	border-radius: 20px !important;
+	padding: 10px;
+	border-radius: 10px !important;
 	background: #f3f3f3;
 	border: black solid 1px !important;
 	box-shadow: 0px 4px 0px 0px black;
+}
+
+.custom-gradient-badge {
+	font-size: 0.85em;
+	font-weight: 400;
+	letter-spacing: 0.3px;
+	/* border: 1px solid #b2afe4; */
+	border: 1px solid darkgray;
+	/* background: linear-gradient(to right, #e8e7f7 0%, #fcf7ff 100%); */
+	background: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);
+	/* color: #7932b7; */
+	border-radius: 25px;
+	padding: 0px 5px 2px 5px;
+	margin: 0px;
+}
+
+.custom-badge {
+	font-size: 0.85em;
+	font-weight: 400;
+	letter-spacing: 0.3px;
+	padding: 0px 5px 2px 5px;
+	margin: 0px;
+}
+
+.attribute-name {
+	font-size: 0.9em;
+	font-weight: 500;
+	margin-bottom: 1px;
+	color: #7932b7;
+}
+
+.card-level {
+	font-size: 0.9em;
+	font-weight: 500;
+	color: #646464;
+	font-style: italic;
 }
