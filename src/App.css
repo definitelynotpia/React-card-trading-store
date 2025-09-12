@@ -26,7 +26,6 @@
 
 /* Navbar stuff */
 .navbar {
-  overflow: hidden;
   height: 10vh !important;
   max-height: 10vh !important;
   transition: 0.2s ease-in !important;
@@ -147,7 +146,7 @@
 /* FILTER OPTIONS */
 .search-input {
   width: 15vw !important;
-  background: rgb(255, 255, 255, 0.5) !important;
+  background: rgb(255, 255, 255, 0.75) !important;
 }
 
 .filter-list-container {
@@ -303,3 +302,7 @@ footer {
   top: -70%;
   left: 70%;
 } */
+
+.dropdown-menu>* {
+  font-size: 0.9em !important;
+}

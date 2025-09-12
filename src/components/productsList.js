@@ -44,7 +44,7 @@ export default function Products() {
 	useEffect(() => {
 		function updatePageSize() {
 			const screenWidth = window.innerWidth;
-			const cols = Math.floor((screenWidth + gap) / (cardWidth + gap)) * 3;
+			const cols = Math.floor((screenWidth + gap) / (cardWidth + gap)) * 5;
 			setPageSize(cols);
 		}
 		updatePageSize();
@@ -85,7 +85,7 @@ export default function Products() {
 			},
 			{
 				root: null, // viewport
-				rootMargin: "0px 0px 300px 0px", // load 300px before bottom
+				rootMargin: "0px 0px -800px 0px", // load 300px before bottom
 				threshold: 0.1 // 10% of target visible
 			}
 		);
