@@ -1,7 +1,7 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import { playCardFlipSfx } from "../utils/sfx";
-import { CardBack } from "./card";
+import CardBack from "../assets/card-back.png";
 // api
 import { useCards } from "../services/pokemonQueries";
 import { generateAvatar } from "../utils/avatar";
@@ -39,56 +39,63 @@ export default function FeaturedCarousel() {
     // autoplay carousel, pause on hover
     useEffect(() => {
         // if paused or no cards, do not play
-        if (paused || visibleCards.length === 0) return;
+        if (paused === 0) return;
         // else, cycle through cards by interval
         const interval = setInterval(() => {
-            setIndex((prevIndex) => (prevIndex + 1) % visibleCards.length);
-        }, 2500);
+            setIndex((prevIndex) => (prevIndex + 1) % (visibleCards.length || 3));
+        }, 1250);
         return () => clearInterval(interval);
     }, [paused, featuredCards.length, visibleCards.length]);
 
     if (isLoading) {
-        return (<div>
-            {Array(3).fill(true).map((card, i) => {
-                // if card is 2nd, set in middle
-                const position = i === 1 ? 'center' : i === 0 ? 'left' : 'right';
-                // if card is not center, set opacity to 75%
-                const opacity = i === 1 ? 100 : 50;
+        return (
+            <Container className="d-flex justify-content-center">
+                <Row className="row-auto d-flex justify-content-center align-items-center">
+                    <div className="featured-carousel"
+                        onMouseEnter={() => setPaused(true)}
+                        onMouseLeave={() => setPaused(false)}>
+                        {Array(3).fill(true).map((card, i) => {
+                            // if card is 2nd, set in middle
+                            const position = i === 1 ? 'center' : i === 0 ? 'left' : 'right';
+                            // if card is not center, set opacity to 75%
+                            const opacity = i === 1 ? 100 : 50;
 
-                return (<div
-                    className={`featured-card ${position} opacity-${opacity} ${grabbingCard === card.id ? 'grabbing' : ''}`}
-                    onClick={() => {
-                        if (i !== 1) playCardFlipSfx(); // play card flip sfx
-                        setIndex((prevIndex) => (prevIndex + 1) % featuredCards.length);
-                    }}
-                    // change cursor appearance to grabbing when clicking
-                    onMouseDown={() => setGrabbingCard(card.id)}
-                    onMouseUp={() => setGrabbingCard(null)}
-                    onMouseLeave={() => setGrabbingCard(null)} >
+                            return (<div
+                                className={`featured-card ${position} opacity-${opacity} ${grabbingCard === card.id ? 'grabbing' : ''}`}
+                                onClick={() => {
+                                    if (i !== 1) playCardFlipSfx(); // play card flip sfx
+                                    setIndex((prevIndex) => (prevIndex + 1) % featuredCards.length);
+                                }}
+                                // change cursor appearance to grabbing when clicking
+                                onMouseDown={() => setGrabbingCard(card.id)}
+                                onMouseUp={() => setGrabbingCard(null)}
+                                onMouseLeave={() => setGrabbingCard(null)} >
 
-                    <Card className="featured-card-outer"
-                        style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
-                    >
-                        <Card className="featured-card-inner" bg="light"
-                            style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
-                        >
-                            <Card.Img variant="top" src={CardBack} alt="Pokemon card back image"
-                                draggable="false" className={`img ${position}`}
-                                style={{ borderRadius: "0.6rem", margin: "auto" }}
-                            />
+                                <Card className="featured-card-outer"
+                                    style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
+                                >
+                                    <Card className="featured-card-inner" bg="light"
+                                        style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
+                                    >
+                                        <Card.Img variant="top" src={CardBack} alt="Pokemon card back image"
+                                            draggable="false" className={`img ${position}`}
+                                            style={{ borderRadius: "0.6rem", margin: "auto" }}
+                                        />
 
-                            <div className="featured-card-shadow"></div>
-                        </Card>
+                                        <div className="featured-card-shadow"></div>
+                                    </Card>
 
-                        <Container className="mt-3 mb-2">
-                            <h3>Creating magic for you...</h3>
-                            <h5>Please wait a moment.</h5>
-                        </Container>
-                    </Card>
+                                    <Container className="mt-3 mb-2 d-flex flex-column justify-content-center">
+                                        <h6 className="p-0 m-0 text-center">Creating magic for you...</h6>
+                                        <p className="p-0 m-0 text-center">Please wait a moment.</p>
+                                    </Container>
+                                </Card>
 
-                </div>);
-            })}
-        </div>);
+                            </div>);
+                        })}
+                    </div>
+                </Row>
+            </Container>);
     }
 
     if (isError) { return <div>Error: {error.message}</div>; }

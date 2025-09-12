@@ -21,12 +21,17 @@ const queryClient = new QueryClient({
   }
 });
 
-const persister = createAsyncStoragePersister({ storage: window.localStorage });
+
+const persister = createAsyncStoragePersister({ storage: window.localStorage, key: 'REACT_QUERY_OFFLINE_CACHE' });
 
 persistQueryClient({
   queryClient,
   persister,
 });
+
+// // Clear cache
+// queryClient.clear(); // in-memory
+// localStorage.removeItem('REACT_QUERY_OFFLINE_CACHE'); // persistent
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

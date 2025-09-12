@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Routes, Route, NavLink } from "react-router-dom";
 // components
-import { Container, Nav, Navbar, Dropdown, Button, Col } from "react-bootstrap";
+import { Container, Nav, Navbar, Dropdown, Button, Form } from "react-bootstrap";
 import CustomFooter from "./components/footer.js";
 // App screens
 import Home from "./screens/Home";
@@ -21,7 +21,7 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
 
-  // when page scrolled on Home page, change navbar bg (transparent -> solid color)
+  // when page scrolled on Home page, change navbar bg (transparent -> solid divor)
   const [navbarBg, setNavbarBg] = useState(false); useEffect(() => {
     const changeNavbarBg = () => { if (window.scrollY >= 50) { setNavbarBg(true); } else { setNavbarBg(false); } };
     // attach listener
@@ -43,19 +43,19 @@ function App() {
   return (
     <div>
       <Navbar
-        className={`navbar ${navbarBg ? "nav-bg" : ""}`}
+        className={`navbar ${navbarBg ? "nav-bg" : ""} m-0 p-0`}
         expand="lg"
         fixed="top"
       >
-        <Container fluid className="mx-4">
-          <Col>
+        <Container fluid className="d-flex flex-row justify-content-between align-items-center mx-4 my-0">
+          <div className="w-25">
             <Navbar.Brand>
               <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} className="clickable-image m-0 p-0" />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
-          </Col>
+          </div>
 
-          <Col>
+          <div>
             <Nav className="d-flex justify-content-center align-items-center">
               <Nav.Link>
                 <NavLink className="mx-2 text-black text-decoration-none" to="/">Home</NavLink>
@@ -64,10 +64,13 @@ function App() {
                 <NavLink className="mx-2 text-black text-decoration-none" to="/explore">Explore</NavLink>
               </Nav.Link>
             </Nav>
-          </Col>
+          </div>
 
-          <Col className="d-flex justify-content-end align-items-center">
-            <Icon.Search size={20} />
+          <div className="d-flex justify-content-end align-items-center w-25">
+            <Form className="d-flex flex-row align-items-center">
+              <Icon.Search size={15} className="me-2" />
+              <Form.Control type="text" size="sm" className="search-input me-2" placeholder="What are you looking for?"></Form.Control>
+            </Form>
             {isLogin ? <>
               <Icon.Heart size={20} className="ms-3" />
               <Icon.Chat size={20} className="ms-3" />
@@ -96,7 +99,7 @@ function App() {
                 <NavLink className="navbar-btn text-white text-decoration-none" to="/register">Register</NavLink>
               </Nav.Link></Button>
             </>}
-          </Col>
+          </div>
         </Container>
       </Navbar>
 

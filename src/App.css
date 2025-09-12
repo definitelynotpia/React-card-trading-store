@@ -26,14 +26,20 @@
 
 /* Navbar stuff */
 .navbar {
-  height: 10vh;
-  transition: 0.2s ease-in;
-  background: transparent;
+  overflow: hidden;
+  height: 10vh !important;
+  max-height: 10vh !important;
+  transition: 0.2s ease-in !important;
+  background: transparent !important;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 
 .nav-bg {
   background: white !important;
-  box-shadow: #06535d2e 0px 0px 5px;
+  box-shadow: #06535d2e 0px 0px 5px !important;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 
 .navbar-btn {
@@ -139,8 +145,13 @@
 }
 
 /* FILTER OPTIONS */
+.search-input {
+  width: 15vw !important;
+  background: rgb(255, 255, 255, 0.5) !important;
+}
+
 .filter-list-container {
-  max-height: 290px;
+  max-height: 320px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -173,7 +184,7 @@
 .flip-card {
   background-color: transparent;
   width: 100%;
-  height: 290px;
+  height: 320px;
   perspective: 1000px;
   cursor: grab;
 }
@@ -200,7 +211,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 290px;
+  height: 320px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -213,14 +224,18 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.flip-card:hover {
+  transform: scale(1.03);
+}
+
 /* CARD PROPERTIES */
 .card-container {
-  height: 290px;
+  height: 320px;
   border-radius: 0.58rem;
 }
 
 .card-image {
-  height: 290px;
+  height: 320px;
   border-radius: 0.58rem;
 }
 
@@ -230,7 +245,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 290px;
+  height: 320px;
   pointer-events: none;
   border-radius: 0.58rem;
   box-shadow: rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;

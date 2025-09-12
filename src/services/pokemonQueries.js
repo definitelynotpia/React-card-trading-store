@@ -10,24 +10,31 @@ export const useCards = (pageSize) => useQuery({
 	}
 });
 
-// fetch all cards with pagination
-export const useCardsAll = () => useInfiniteQuery({
+// fetch all cards
+export const useCardsAll = () => useQuery({
+	queryKey: ["allCards"],
+	queryFn: async () => { // default page length = 1
+		const res = await api.get(`/cards?pageSize = 1`);
+		return res.data.data;
+	},
+});
+
+// fetch all cards for infinite scroll
+export const useCardsInfinite = (pageSize = 5) => useInfiniteQuery({
 	queryKey: ["cards"],
 	queryFn: async ({ pageParam = 1 }) => { // default page length = 1
-		const res = await api.get(`/cards?page=${pageParam}&pageSize=16`);
+		const res = await api.get(`/cards?page=${pageParam}&pageSize=${pageSize}`);
 		return res.data;
 	},
-	getNextPageParam: (lastPage) => {
-		if (lastPage.page < lastPage.totalPages) {
-			return lastPage.page++;
+	getNextPageParam: (lastPage, allPages) => {
+		console.log("lastPage:", lastPage);
+		if (lastPage.totalCount && lastPage.pageSize && lastPage.page) {
+			// total pages = all cards / cards in page
+			const totalPages = Math.ceil(lastPage.totalCount / lastPage.pageSize);
+			return lastPage.page < totalPages ? lastPage.page + 1 : undefined;
 		}
-		return lastPage.page;
-	},
-	getPreviousPageParam: (firstPage) => {
-		if (firstPage.page < firstPage.totalPages) {
-			return firstPage.page++;
-		}
-		return firstPage.page;
+		// fallback: check if API returned items
+		return lastPage.data.length > 0 ? allPages.length + 1 : undefined;
 	},
 });
 

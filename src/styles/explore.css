@@ -2,8 +2,8 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 240px);
 	grid-template-rows: repeat(3, auto);
-	column-gap: 25px;
-	row-gap: 50px;
+	column-gap: 18px;
+	row-gap: 35px;
 	justify-content: center;
 	align-items: center;
 }
@@ -11,11 +11,15 @@
 .product-card {
 	display: flex;
 	flex-direction: column;
-	padding: 10px;
+	padding: 2px;
 	border-radius: 10px !important;
 	background: #f3f3f3;
-	border: black solid 1px !important;
+	border: rgba(0, 0, 0, 0.5) solid 0.1px !important;
 	box-shadow: 0px 4px 0px 0px black;
+}
+
+.product-card:hover {
+	cursor: pointer;
 }
 
 .custom-gradient-badge {
