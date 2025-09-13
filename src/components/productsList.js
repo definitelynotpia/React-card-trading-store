@@ -7,7 +7,7 @@ import { CardFront, CardBack } from "../components/card.js";
 import { useState, useEffect, useRef } from "react";
 // api fetch
 // import { useCardsAll } from "../services/pokemonQueries";
-import { useCards, useCardsInfinite } from "../services/pokemonQueries";
+import { useCardsAll } from "../services/pokemonQueries";
 // card type icons
 import DarknessIcon from "../assets/card-icons/dark.png";
 import DragonIcon from "../assets/card-icons/dragon.png";
@@ -38,14 +38,16 @@ export default function Products() {
 	};
 
 	// get screen width and number of cards in row that fits
-	const [pageSize, setPageSize] = useState(15);
+	const [visibleRows, setVisibleRows] = useState(3);
+	const [rowCardsCount, setRowCardsCount] = useState(5);
 	const cardWidth = 242;
 	const gap = 18;
+	// if screen size changes, adjust display of loaded cards per row
 	useEffect(() => {
 		function updatePageSize() {
 			const screenWidth = window.innerWidth;
-			const cols = Math.floor((screenWidth + gap) / (cardWidth + gap)) * 5;
-			setPageSize(cols);
+			const cols = Math.floor((screenWidth + gap) / (cardWidth + gap));
+			setRowCardsCount(cols);
 		}
 		updatePageSize();
 		window.addEventListener("resize", updatePageSize);
@@ -53,45 +55,25 @@ export default function Products() {
 	}, [cardWidth, gap]);
 
 	// query all Pokemon cards
-	const { data: infiniteData,
-		fetchNextPage,
-		hasNextPage,
-		isFetchingNextPage,
-		isLoading,
-		isError,
-		error } = useCardsInfinite(pageSize);
-	const loadMoreRef = useRef();
-	// flatten pages into one array for infinite scroll
-	const cards = infiniteData?.pages.flatMap(page => page.data) || [];
+	const { data, isLoading, isError, error } = useCardsAll();
+	const containerRef = useRef(null);
+	// computed number of cards to show
+	const visibleCards = rowCardsCount * visibleRows;
+	const displayedCards = data?.slice(0, visibleCards) || [];
 
-	// preload next page
+	// when scrolled to end of products list, display 1 more row of cards
 	useEffect(() => {
-		if (hasNextPage) {
-			// preload 2–3 pages ahead
-			fetchNextPage();
-		}
-	}, [hasNextPage, fetchNextPage]);
-
-
-	useEffect(() => {
-		const node = loadMoreRef.current;
-		if (!node) return;
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				console.log("Intersecting?", entry.isIntersecting, hasNextPage, !isFetchingNextPage);
-				if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-					fetchNextPage();
-				}
-			},
-			{
-				root: null, // viewport
-				rootMargin: "0px 0px -800px 0px", // load 300px before bottom
-				threshold: 0.1 // 10% of target visible
+		const grid = containerRef.current;
+		if (!grid) return;
+		const handleScroll = () => {
+			if ((grid.scrollTop + grid.clientHeight) >= (grid.scrollHeight - 50)) {
+				setVisibleRows((prev) => prev + 1);
 			}
-		);
-		observer.observe(node);
-		return () => { if (node) observer.unobserve(node) };
-	}, [loadMoreRef, fetchNextPage, hasNextPage, isFetchingNextPage]);
+		};
+
+		grid.addEventListener("scroll", handleScroll);
+		return () => { grid.removeEventListener("scroll", handleScroll) };
+	}, [rowCardsCount, visibleRows]);
 
 	// ui state
 	const [grabbingCard, setGrabbingCard] = useState(null);
@@ -104,14 +86,12 @@ export default function Products() {
 		}));
 	};
 
-	// if (isAllLoading) { return (<>Loading all products...</>); }
-	// if (isAllError) { return (<>Error: {errorAll.message}</>); }
 	if (isLoading) { return (<>Loading all products...</>); }
 	if (isError) { return (<>Error: {error.message}</>); }
 
 	return (<div>
-		<div className="products-grid">
-			{(cards.map(card => (
+		<div className="products-grid" ref={containerRef}>
+			{(displayedCards.map(card => (
 				//  lazy scroll
 				<Card key={card.id ?? card.name} className="product-card">
 					<div className={`flip-card ${grabbingCard === card.id ? 'grabbing' : ''}`}
@@ -179,11 +159,6 @@ export default function Products() {
 					</Container>
 				</Card>
 			)))}
-		</div>
-
-		<div ref={loadMoreRef}>{isFetchingNextPage &&
-			<h1 className="text-center w-100 py-5 my-5">
-				Please wait a moment!</h1>}
 		</div>
 	</div >);
 }

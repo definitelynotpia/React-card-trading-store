@@ -56,11 +56,9 @@ export default function Services() {
 					<Card key={i} className={`service-card ${card.backgroundColor} h-100`}>
 						<Row className="h-100">
 							<Col className="service-desc d-flex flex-column justify-content-between align-items-start w-50">
-								<p>
-									{card.title.map((line, id) => (
-										<><span key={id} className={`service-title ${card.highlightColor}`}>{line}</span><br /></>
-									))}
-								</p>
+								{card.title.map((line, id) => (
+									<div key={id}><span className={`service-title ${card.highlightColor}`}>{line}</span></div>
+								))}
 								<p className="service-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum semper diam vitae libero feugiat.</p>
 								<Button className={`service-card-btn d-flex justify-items-between align-items-center justify-self-end p-0 m-0 ${card.backgroundColor === "black" ? 'text-white' : 'text-black'}`}>
 									<Icon.ArrowUpRightCircleFill size={20} color={card.iconColor} className="me-2" />

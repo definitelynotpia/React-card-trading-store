@@ -8,8 +8,11 @@ export const useCards = (pageSize) => useQuery({
 	queryFn: async () => {
 		// check if data is cached in localforage
 		const cacheKey = `cards-${pageSize}`;
-		const cacheData = localforage.getItem(cacheKey);
-		if (cacheData) return cacheData;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
 
 		// if not cached, fetch from API and cache
 		const res = await api.get(`/cards?pageSize=${pageSize}`);
@@ -24,28 +27,57 @@ export const useCards = (pageSize) => useQuery({
 // fetch all cards
 export const useCardsAll = () => useQuery({
 	queryKey: ["allCards"],
-	queryFn: async () => { // default page length = 1
-		// check if data is cached in localforage
-		const cacheKey = `cards-all`;
-		const cacheData = localforage.getItem(cacheKey);
-		if (cacheData) return cacheData;
+	queryFn: async () => {
+		const cacheKey = `allCards`;
+		const cacheData = await localforage.getItem(cacheKey);
 
-		// if not cached, fetch from API and cache
-		const res = await api.get(`/cards?pageSize = 1`);
-		const data = res.data.data;
-		await localforage.setItem(cacheKey, data);
-		return data;
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		}
+
+		let allCards = [];
+		let page = 1;
+		let hasMore = true;
+
+		while (hasMore) {
+			const res = await api.get(`/cards?page=${page}&pageSize=250`); // max allowed
+			const { data, count, totalCount } = res.data;
+
+			allCards = allCards.concat(data);
+
+			if (allCards.length >= totalCount || count === 0) {
+				hasMore = false;
+			} else {
+				page++;
+			}
+		}
+
+		await localforage.setItem(cacheKey, allCards);
+		return allCards;
 	},
 	staleTime: Infinity,
 	cacheTime: Infinity,
 });
 
+
 // fetch all cards for infinite scroll
 export const useCardsInfinite = (pageSize = 5) => useInfiniteQuery({
-	queryKey: ["cards"],
+	queryKey: ["cards-infinite", pageSize],
 	queryFn: async ({ pageParam = 1 }) => { // default page length = 1
+		// check if data is cached in localforage
+		const cacheKey = `cards-infinite-${pageParam}-${pageSize}`;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
+
+		// if not cached, fetch from API and cache
 		const res = await api.get(`/cards?page=${pageParam}&pageSize=${pageSize}`);
-		return res.data;
+		const data = res.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
 	getNextPageParam: (lastPage, allPages) => {
 		console.log("lastPage:", lastPage);
@@ -57,49 +89,116 @@ export const useCardsInfinite = (pageSize = 5) => useInfiniteQuery({
 		// fallback: check if API returned items
 		return lastPage.data.length > 0 ? allPages.length + 1 : undefined;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // fetch card rarities
 export const useRarities = () => useQuery({
 	queryKey: ["rarities"],
 	queryFn: async () => {
+		// check if data is cached in localforage
+		const cacheKey = `rarities`;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
+
+		// if not cached, fetch from API and cache
 		const res = await api.get("/rarities");
-		return res.data.data || res.data;
+		const data = res.data.data || res.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // card types
 export const useTypes = () => useQuery({
 	queryKey: ["types"],
 	queryFn: async () => {
+		// check if data is cached in localforage
+		const cacheKey = `types`;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
+
+		// if not cached, fetch from API and cache
 		const res = await api.get("/types");
-		return res.data.data || res.data;
+		const data = res.data.data || res.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // card supertypes
 export const useSupertypes = () => useQuery({
 	queryKey: ["supertypes"],
 	queryFn: async () => {
+		// check if data is cached in localforage
+		const cacheKey = `supertypes`;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
+
+		// if not cached, fetch from API and cache
 		const res = await api.get("/supertypes");
-		return res.data.data || res.data;
+		const data = res.data.data || res.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // card subtypes
 export const useSubtypes = () => useQuery({
 	queryKey: ["subtypes"],
 	queryFn: async () => {
+		// check if data is cached in localforage
+		const cacheKey = `subtypes`;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
+
+		// if not cached, fetch from API and cache
 		const res = await api.get("/subtypes");
-		return res.data.data || res.data;
+		const data = res.data.data || res.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // card sets
 export const useSets = () => useQuery({
 	queryKey: ["sets"],
 	queryFn: async () => {
+		// check if data is cached in localforage
+		const cacheKey = `sets`;
+		const cacheData = await localforage.getItem(cacheKey);
+		if (cacheData) {
+			console.log(cacheKey, "fetched from localforage!");
+			return cacheData;
+		};
+
+		// if not cached, fetch from API and cache
 		const res = await api.get("/sets");
-		return res.data.data || res.data;
+		const data = res.data.data || res.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });

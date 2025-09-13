@@ -50,10 +50,10 @@ function App() {
         <Container fluid className="d-flex flex-row justify-content-between align-items-center mx-4 my-0">
           <div className="d-flex flex-row w-25">
             <Navbar.Brand>
-              <Logo width="10vw" alt="TradeBall" onClick={() => navigate("/")} className="clickable-image m-0 p-0" />
+              <Logo width="10vw" height="auto" alt="TradeBall" onClick={() => navigate("/")} className="clickable-image m-0 p-0" />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
-            <Form className="d-flex flex-row align-items-center ms-4">
+            <Form className="d-flex flex-row align-items-center ms-4" style={{ width: "15vw" }}>
               <Form.Control type="text" size="sm" className="search-input me-2" placeholder="What are you looking for?"></Form.Control>
               <Icon.Search size={15} className="me-2" />
             </Form>
