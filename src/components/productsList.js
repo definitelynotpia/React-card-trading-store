@@ -1,12 +1,10 @@
 import "../App.css";
 // react
 import { playCardFlipSfx } from "../utils/sfx";
-// import { Pagination, Card, Container } from "react-bootstrap";
-import { Card, Container } from "react-bootstrap";
+import { Pagination, Card } from "react-bootstrap";
 import { CardFront, CardBack } from "../components/card.js";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 // api fetch
-// import { useCardsAll } from "../services/pokemonQueries";
 import { useCardsAll } from "../services/pokemonQueries";
 // card type icons
 import DarknessIcon from "../assets/card-icons/dark.png";
@@ -37,43 +35,23 @@ export default function Products() {
 		Water: WaterIcon,
 	};
 
-	// get screen width and number of cards in row that fits
-	const [visibleRows, setVisibleRows] = useState(3);
-	const [rowCardsCount, setRowCardsCount] = useState(5);
-	const cardWidth = 242;
-	const gap = 18;
-	// if screen size changes, adjust display of loaded cards per row
-	useEffect(() => {
-		function updatePageSize() {
-			const screenWidth = window.innerWidth;
-			const cols = Math.floor((screenWidth + gap) / (cardWidth + gap));
-			setRowCardsCount(cols);
-		}
-		updatePageSize();
-		window.addEventListener("resize", updatePageSize);
-		return () => window.removeEventListener("resize", updatePageSize);
-	}, [cardWidth, gap]);
+	// query first 250 Pokemon cards
+	const { data,
+		fetchNextPage,
+		fetchPreviousPage,
+		hasNextPage,
+		hasPreviousPage,
+		isFetching,
+		isLoading,
+		isError,
+		error } = useCardsAll();
 
-	// query all Pokemon cards
-	const { data, isLoading, isError, error } = useCardsAll();
-	const containerRef = useRef(null);
-	// computed number of cards to show
-	const visibleCards = rowCardsCount * visibleRows;
-	const displayedCards = data?.slice(0, visibleCards) || [];
-
-	// when scrolled to end of products list, display 1 more row of cards
-	useEffect(() => {
-		const grid = containerRef.current;
-		if (!grid) return;
-		const handleScroll = () => {
-			if ((grid.scrollTop + grid.clientHeight) >= (grid.scrollHeight - 50)) {
-				setVisibleRows((prev) => prev + 1);
-			}
-		};
-
-		grid.addEventListener("scroll", handleScroll);
-		return () => { grid.removeEventListener("scroll", handleScroll) };
-	}, [rowCardsCount, visibleRows]);
+	// get recently fetched pages
+	const lastPage = data?.pages[data.pages.length - 1];
+	const currentPage = lastPage?.page ?? 1;
+	const totalPages = lastPage ? Math.ceil((lastPage.totalCount ?? 0) / (lastPage.pageSize ?? 1)) : 1;
+	// get cards of current page
+	const cards = Array.isArray(lastPage?.data) ? lastPage.data : [];
 
 	// ui state
 	const [grabbingCard, setGrabbingCard] = useState(null);
@@ -86,36 +64,31 @@ export default function Products() {
 		}));
 	};
 
-	if (isLoading) { return (<>Loading all products...</>); }
-	if (isError) { return (<>Error: {error.message}</>); }
+	if (isLoading) { return (<h4 className="w-100 my-5 py-5 text-center">Stocking the store. Please wait...</h4>); }
+	if (isError) { return (<h4 className="w-100 my-5 py-5 text-center">Error: {error.message}</h4>); }
 
 	return (<div>
-		<div className="products-grid" ref={containerRef}>
-			{(displayedCards.map(card => (
-				//  lazy scroll
-				<Card key={card.id ?? card.name} className="product-card">
-					<div className={`flip-card ${grabbingCard === card.id ? 'grabbing' : ''}`}
-						// toggle card flipping animation and play card flip sfx
-						onClick={event => {
-							event.stopPropagation();
-							playCardFlipSfx();
-							toggleFlip(card.id);
-						}}
-						// change cursor appearance to grabbing when clicking
-						onMouseDown={() => setGrabbingCard(card.id)}
-						onMouseUp={() => setGrabbingCard(null)}
-						onMouseLeave={() => setGrabbingCard(null)} >
-						<div className={`flip-card-inner ${flippedCards[card.id] ? 'flipped' : ''}`}>
-							<div className="flip-card-front">
-								<CardFront card={card} />
-							</div>
-							<div className="flip-card-back">
-								<CardBack card={card} />
+		<div className="products-grid">
+			{isFetching ? (<h4 className="w-100 h-75 text-center">Fetching page...</h4>) :
+				(cards.map(card => (
+					<Card key={card.id ?? card.name} className="product-card">
+						<div className={`flip-card ${grabbingCard === card.id ? 'grabbing' : ''}`}
+							// toggle card flipping animation and play card flip sfx
+							onClick={() => { playCardFlipSfx(); toggleFlip(card.id); }}
+							// change cursor appearance to grabbing when clicking
+							onMouseDown={() => setGrabbingCard(card.id)}
+							onMouseUp={() => setGrabbingCard(null)}
+							onMouseLeave={() => setGrabbingCard(null)} >
+							<div className={`flip-card-inner ${flippedCards[card.id] ? 'flipped' : ''}`}>
+								<div className="flip-card-front">
+									<CardFront card={card} />
+								</div>
+								<div className="flip-card-back">
+									<CardBack card={card} />
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<Container className="mb-3">
 						<div className="d-flex flex-row justify-content-between align-items-center my-1 mx-0">
 							<div className="d-flex flex-row justify-content-end align-items-end">
 								<h4 className="fw-bold mt-1 me-2 my-0 p-0">{card.name}</h4>
@@ -156,9 +129,24 @@ export default function Products() {
 								))}
 							</div>
 						</div>
-					</Container>
-				</Card>
-			)))}
+					</Card>
+				)))}
 		</div>
+
+		<Pagination className="mt-5 mx-auto d-flex w-100 justify-items-center align-items-center">
+			<Pagination.First
+				onClick={() => fetchPreviousPage({ pageParam: 1 })}
+				disabled={currentPage === 1 || isFetching} />
+			<Pagination.Prev
+				onClick={() => fetchPreviousPage()}
+				disabled={!hasPreviousPage || isFetching} />
+
+			<Pagination.Next
+				onClick={() => fetchNextPage()}
+				disabled={!hasNextPage || isFetching} />
+			<Pagination.Last
+				onClick={() => fetchNextPage({ pageParam: totalPages })}
+				disabled={currentPage === totalPages || isFetching} />
+		</Pagination>
 	</div >);
 }

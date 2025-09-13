@@ -24,42 +24,27 @@ export const useCards = (pageSize) => useQuery({
 	cacheTime: Infinity,
 });
 
-// fetch all cards
+// fetch all cards (max limit = 250)
 export const useCardsAll = () => useQuery({
-	queryKey: ["allCards"],
-	queryFn: async () => {
-		const cacheKey = `allCards`;
+	queryKey: ["cards-all"],
+	queryFn: async () => { // default page length = 1
+		// check if data is cached in localforage
+		const cacheKey = `cards-all`;
 		const cacheData = await localforage.getItem(cacheKey);
-
 		if (cacheData) {
 			console.log(cacheKey, "fetched from localforage!");
 			return cacheData;
-		}
+		};
 
-		let allCards = [];
-		let page = 1;
-		let hasMore = true;
-
-		while (hasMore) {
-			const res = await api.get(`/cards?page=${page}&pageSize=250`); // max allowed
-			const { data, count, totalCount } = res.data;
-
-			allCards = allCards.concat(data);
-
-			if (allCards.length >= totalCount || count === 0) {
-				hasMore = false;
-			} else {
-				page++;
-			}
-		}
-
-		await localforage.setItem(cacheKey, allCards);
-		return allCards;
+		// if not cached, fetch from API and cache
+		const res = await api.get(`/cards`);
+		const data = res.data.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
 	staleTime: Infinity,
 	cacheTime: Infinity,
 });
-
 
 // fetch all cards for infinite scroll
 export const useCardsInfinite = (pageSize = 5) => useInfiniteQuery({
