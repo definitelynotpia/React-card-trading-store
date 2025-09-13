@@ -1,22 +1,43 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import localforage from "localforage";
 import api from "./api";
 
 // fetch some amount of cards
 export const useCards = (pageSize) => useQuery({
 	queryKey: ["cards", pageSize],
 	queryFn: async () => {
+		// check if data is cached in localforage
+		const cacheKey = `cards-${pageSize}`;
+		const cacheData = localforage.getItem(cacheKey);
+		if (cacheData) return cacheData;
+
+		// if not cached, fetch from API and cache
 		const res = await api.get(`/cards?pageSize=${pageSize}`);
-		return res.data.data;
-	}
+		const data = res.data.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
+	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // fetch all cards
 export const useCardsAll = () => useQuery({
 	queryKey: ["allCards"],
 	queryFn: async () => { // default page length = 1
+		// check if data is cached in localforage
+		const cacheKey = `cards-all`;
+		const cacheData = localforage.getItem(cacheKey);
+		if (cacheData) return cacheData;
+
+		// if not cached, fetch from API and cache
 		const res = await api.get(`/cards?pageSize = 1`);
-		return res.data.data;
+		const data = res.data.data;
+		await localforage.setItem(cacheKey, data);
+		return data;
 	},
+	staleTime: Infinity,
+	cacheTime: Infinity,
 });
 
 // fetch all cards for infinite scroll
