@@ -14,7 +14,7 @@
 	padding: 2px;
 	border-radius: 10px !important;
 	background: #f3f3f3;
-	border: rgba(0, 0, 0, 0.5) solid 0.1px !important;
+	border: black solid 0.1px !important;
 	box-shadow: 0px 4px 0px 0px black;
 }
 
@@ -26,21 +26,16 @@
 	font-size: 0.85em;
 	font-weight: 400;
 	letter-spacing: 0.3px;
-	/* border: 1px solid #b2afe4; */
 	border: 1px solid darkgray;
-	/* background: linear-gradient(to right, #e8e7f7 0%, #fcf7ff 100%); */
 	background: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);
-	/* color: #7932b7; */
 	border-radius: 25px;
-	padding: 0px 5px 2px 5px;
+	padding: 0px 4px 2px 4px;
 	margin: 0px;
 }
 
 .custom-badge {
-	font-size: 0.85em;
+	font-size: 0.9em;
 	font-weight: 400;
-	letter-spacing: 0.3px;
-	padding: 0px 5px 2px 5px;
 	margin: 0px;
 }
 
@@ -51,9 +46,44 @@
 	color: #7932b7;
 }
 
+.card-name {
+	min-width: 0;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
+
 .card-level {
-	font-size: 0.9em;
+	font-size: 0.85em;
 	font-weight: 500;
 	color: #646464;
 	font-style: italic;
+	min-width: fit-content;
+}
+
+.card-type:hover {
+	transform: scale(1.2);
+}
+
+.card-artist {
+	min-width: 0;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
+
+.price-value {
+	font-weight: 500;
+	font-size: 1.4em;
+	color: #7932b7;
+	padding-right: 2px;
+}
+
+.price-tag {
+	font-weight: 500;
+	font-size: 0.8em;
+}
+
+.tooltip {
+	font-size: 0.5em !important;
 }

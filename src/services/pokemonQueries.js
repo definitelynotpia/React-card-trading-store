@@ -42,12 +42,24 @@ export const useCardsAll = () => useQuery({
 		await localforage.setItem(cacheKey, data);
 		return data;
 	},
+	getNextPageParam: (lastPage) => {
+		if (lastPage.page < lastPage.totalPages) {
+			return lastPage.page++;
+		}
+		return lastPage.page;
+	},
+	getPreviousPageParam: (firstPage) => {
+		if (firstPage.page < firstPage.totalPages) {
+			return firstPage.page++;
+		}
+		return firstPage.page;
+	},
 	staleTime: Infinity,
 	cacheTime: Infinity,
 });
 
 // fetch all cards for infinite scroll
-export const useCardsInfinite = (pageSize = 5) => useInfiniteQuery({
+export const useCardsInfinite = (pageSize = 15, maxPages = 25) => useInfiniteQuery({
 	queryKey: ["cards-infinite", pageSize],
 	queryFn: async ({ pageParam = 1 }) => { // default page length = 1
 		// check if data is cached in localforage
@@ -55,24 +67,25 @@ export const useCardsInfinite = (pageSize = 5) => useInfiniteQuery({
 		const cacheData = await localforage.getItem(cacheKey);
 		if (cacheData) {
 			console.log(cacheKey, "fetched from localforage!");
+			console.log("page", cacheData.page, "pageSize", cacheData.pageSize, "count", cacheData.count, "totalCount", cacheData.totalCount);
 			return cacheData;
 		};
 
 		// if not cached, fetch from API and cache
 		const res = await api.get(`/cards?page=${pageParam}&pageSize=${pageSize}`);
 		const data = res.data;
+		console.log("page", data.page, "pageSize", data.pageSize, "count", data.count, "totalCount", data.totalCount);
 		await localforage.setItem(cacheKey, data);
 		return data;
 	},
-	getNextPageParam: (lastPage, allPages) => {
-		console.log("lastPage:", lastPage);
-		if (lastPage.totalCount && lastPage.pageSize && lastPage.page) {
-			// total pages = all cards / cards in page
-			const totalPages = Math.ceil(lastPage.totalCount / lastPage.pageSize);
-			return lastPage.page < totalPages ? lastPage.page + 1 : undefined;
-		}
-		// fallback: check if API returned items
-		return lastPage.data.length > 0 ? allPages.length + 1 : undefined;
+	getNextPageParam: (lastPage) => {
+		const totalPages = Math.ceil(lastPage.totalCount / lastPage.pageSize);
+		const maxTotalPages = Math.min(totalPages, maxPages);
+
+		return lastPage.page < maxTotalPages ? lastPage.page + 1 : undefined;
+	},
+	getPreviousPageParam: (firstPage) => {
+		return firstPage.page > 1 ? firstPage.page - 1 : undefined;
 	},
 	staleTime: Infinity,
 	cacheTime: Infinity,

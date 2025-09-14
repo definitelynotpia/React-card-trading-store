@@ -38,8 +38,8 @@ export default function FeaturedCarousel() {
 
     // autoplay carousel, pause on hover
     useEffect(() => {
-        // if paused or no cards, do not play
-        if (paused === 0) return;
+        // if paused, do not play
+        if (paused) return;
         // else, cycle through cards by interval
         const interval = setInterval(() => {
             setIndex((prevIndex) => (prevIndex + 1) % (visibleCards.length || 3));

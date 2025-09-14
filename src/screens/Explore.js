@@ -78,28 +78,29 @@ export default function Explore() {
                         {filterItem.text}
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu style={{background: "#ffffffff"}}>
-                        {filterItem.list.length > 10 && <><input className="filter-search" placeholder="test" /></>}
+                    <Dropdown.Menu style={{ background: "#ffffffff" }}>
+                        {filterItem.list.length > 10 && <input className="filter-search" placeholder="Search items..." />}
+
                         <div className="filter-list-container">
                             {filterItem.list.map((item, i) => {
-                            if (filterItem.list.length < 1) {
-                                return (<Dropdown.Item className="filter-list-item">
-                                    Loading...
-                                </Dropdown.Item>);
-                            }
-                            return (
-                                <Dropdown.Item key={i} className="filter-list-item">
-                                    {item.name || item}
-                                </Dropdown.Item>
-                            );
-                        })}
+                                if (filterItem.list.length < 1) {
+                                    return (<Dropdown.Item className="filter-list-item">
+                                        Loading...
+                                    </Dropdown.Item>);
+                                }
+                                return (
+                                    <Dropdown.Item key={i} className="filter-list-item">
+                                        {item.name || item}
+                                    </Dropdown.Item>
+                                );
+                            })}
                         </div>
                     </Dropdown.Menu>
                 </Dropdown>
             ))}
         </div>
 
-        <div className="tab-content mt-5">
+        <div className="tab-content">
             <Products />
         </div>
     </div >);
