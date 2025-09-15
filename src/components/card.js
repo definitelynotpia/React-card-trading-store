@@ -120,10 +120,10 @@ export const CardInfo = ({ card }) => {
     );
 };
 
-export const CardFront = ({ card }) => {
+export const CardFront = ({ card, large = true }) => {
     return (
         <Card className="card-container border-0" >
-            <Card.Img src={card.images.large} className="card-image m-0 p-0" alt={card.name} draggable="false" />
+            <Card.Img src={large ? card.images.large : card.images.small} className="card-image m-0 p-0" alt={card.name} draggable="false" />
             <div className="card-shadow"></div>
         </Card>
     );

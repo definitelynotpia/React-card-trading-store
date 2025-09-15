@@ -44,6 +44,7 @@
 	font-weight: 500;
 	margin-bottom: 1px;
 	color: #7932b7;
+	line-height: 0.95;
 }
 
 .card-name {
@@ -86,4 +87,74 @@
 
 .tooltip {
 	font-size: 0.5em !important;
+}
+
+/* product page */
+
+.listings-column {
+	padding-top: 10vh;
+}
+
+.product-column {
+	height: 90vh;
+	width: 260px;
+	overflow-y: auto;
+}
+
+.product-info>* {
+	margin: 0px 14px;
+	font-size: 1.15em;
+}
+
+.product-info>*:not(:first-child) {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* override React Bootstrap CSS */
+.accordion>* {
+	border: none !important;
+}
+
+.accordion-item {
+	padding: 0px !important;
+}
+
+.accordion-button.collapsed {
+	background-color: #f3f3f3 !important;
+	padding: 6px 20px 6px 20px !important;
+	border-radius: 0px !important;
+}
+
+.accordion-button:not(.collapsed) {
+	background-color: #f3f3f3 !important;
+	border-radius: 0px !important;
+	padding: 6px 20px 6px 20px !important;
+}
+
+.accordion-body {
+	scale: 0.9;
+	width: 235px;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.accordion-button>p {
+	font-size: 12px !important;
+	font-style: italic !important;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.accordion-button::after {
+	transform: rotate(0deg) scale(0.6) !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+	transform: rotate(-180deg) scale(0.6) !important;
+}
+
+/* listings */
+.listings-table {
+	margin-left: 20px;
+	overflow-y: scroll;
 }

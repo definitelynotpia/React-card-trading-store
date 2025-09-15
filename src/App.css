@@ -12,7 +12,8 @@
 }
 
 .content {
-  padding: 10vh 0px;
+  padding-top: 10vh;
+  padding-bottom: 4vh;
 }
 
 /* Blue gradient bg */

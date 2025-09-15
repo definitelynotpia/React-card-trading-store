@@ -4,6 +4,8 @@ import { playCardFlipSfx } from "../utils/sfx";
 import { OverlayTrigger, Tooltip, Pagination, Card, Button } from "react-bootstrap";
 import { CardFront, CardBack } from "../components/card.js";
 import { useState, useEffect } from "react";
+// routing
+import { Link } from "react-router-dom";
 // react-icons
 import { LuChevronFirst, LuChevronLast, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 // api fetch
@@ -22,23 +24,8 @@ import MetalIcon from "../assets/card-icons/steel.png";
 import WaterIcon from "../assets/card-icons/water.png";
 
 export default function Products() {
-	// map icon to card type
-	const typeIcons = {
-		Colorless: ColorlessIcon,
-		Darkness: DarknessIcon,
-		Dragon: DragonIcon,
-		Fairy: FairyIcon,
-		Fighting: FightingIcon,
-		Fire: FireIcon,
-		Grass: GrassIcon,
-		Lightning: LightningIcon,
-		Metal: MetalIcon,
-		Psychic: PsychicIcon,
-		Water: WaterIcon,
-	};
-
 	const pageSize = 15;
-	const maxPages = 15;
+	const maxPages = 20;
 
 	// query first 250 Pokemon cards
 	const { data,
@@ -63,9 +50,27 @@ export default function Products() {
 	const hasMorePages = currentPageNumber < cappedTotalPages;
 	const hasNextCachedPage = currentPageIndex < (data?.pages.length ?? 0) - 1;
 
+	console.log("totalPages", totalPages);
+	console.log("cappedTotalPages", cappedTotalPages);
+	console.log("fetchedPages", data?.pages.length);
+
 	// ui state
 	const [grabbingCard, setGrabbingCard] = useState(null);
 	const [flippedCards, setFlippedCards] = useState({});
+	// map icon to card type
+	const typeIcons = {
+		Colorless: ColorlessIcon,
+		Darkness: DarknessIcon,
+		Dragon: DragonIcon,
+		Fairy: FairyIcon,
+		Fighting: FightingIcon,
+		Fire: FireIcon,
+		Grass: GrassIcon,
+		Lightning: LightningIcon,
+		Metal: MetalIcon,
+		Psychic: PsychicIcon,
+		Water: WaterIcon,
+	};
 
 	const toggleFlip = (cardId) => {
 		setFlippedCards(prev => ({
@@ -94,15 +99,32 @@ export default function Products() {
 				</Button>
 
 				{Array.from({ length: cappedTotalPages }, (_, i) => (
-					<Button
-						key={i}
-						variant="light"
-						className={currentPageNumber === i + 1 ? "current-page" : ""}
-						onClick={() => setCurrentPageIndex(i)} // go to page i
-					>
+					<Button key={i} variant="light" className={currentPageNumber === i + 1 ? "current-page" : ""}
+						disabled={isFetching && currentPageIndex === i}
+						onClick={async () => {
+							const totalFetched = data?.pages.length ?? 0;
+
+							if (i < totalFetched) {
+								// if cached, jump to
+								setCurrentPageIndex(i);
+								return;
+							}
+							if (i >= totalFetched) {
+								let pageToFetch = totalFetched;
+								// only keep fetching while more pages exist
+								while (pageToFetch <= i) {
+									if (hasMorePages) {
+										await fetchNextPage();
+									}
+									pageToFetch++;
+								}
+								setCurrentPageIndex(i);
+							}
+						}}>
 						{i + 1}
 					</Button>
 				))}
+
 
 				<Button variant="light" disabled={(!hasNextCachedPage && !hasMorePages)}
 					onClick={() => {
@@ -149,11 +171,6 @@ export default function Products() {
 				(<h4 className="w-100 my-5 py-5 text-center">Fetching next page...</h4>) :
 				// else, render cards
 				(cards.map(card => {
-					const fetchedPrice = card.cardmarket?.prices.trendPrice;
-					const convertedPrice = fetchedPrice * 63; // EUR to PHP manual conversion ?
-					const price = (Math.round(convertedPrice * 100) / 100).toFixed(2);
-
-					console.log(card.id, card.name);
 
 					return (<Card key={card.id ?? card.name} className="product-card">
 						<div className={`flip-card ${grabbingCard === card.id ? 'grabbing' : ''}`}
@@ -185,7 +202,7 @@ export default function Products() {
 							<div className="d-flex flex-row justify-content-between align-items-center my-1 p-0">
 								<div className="d-flex flex-row justify-content-end align-items-end">
 									<h4 className="card-name fw-bold my-0 px-0 py-1"
-										style={{ maxWidth: `calc(222px - ${28 * card.types.length}px)` }}
+										style={{ maxWidth: `calc(222px - ${28 * (card.types.length || 0)}px)` }}
 									>{card.name}</h4>
 									{card.level && <p className="card-level ms-1 mx-2 my-0 px-0 py-1">Lvl {card.level}</p>}
 								</div>
@@ -230,7 +247,9 @@ export default function Products() {
 							</div>
 
 							<div className="d-flex flex-row justify-content-center align-items-center mt-3 mb-1">
-								<Button variant="outline-dark" className="listings py-1 w-100">View Listings</Button>
+								<Link to={`/explore/${card.id}`} state={{ card }} className="listings w-100">
+									<Button variant="outline-dark" className="w-100">View Listings</Button>
+								</Link>
 							</div>
 						</div>
 					</Card>);
@@ -252,8 +271,24 @@ export default function Products() {
 						key={i}
 						variant="light"
 						className={currentPageNumber === i + 1 ? "current-page" : ""}
-						disabled={isFetching}
-						onClick={() => setCurrentPageIndex(i)} // go to page i
+						disabled={isFetching || currentPageIndex === i}
+						onClick={async () => {
+							// get number of current total fetched pages
+							const totalFetched = data?.pages.length ?? 0;
+							if (i < totalFetched) {
+								// If the page is already cached, just jump to it
+								setCurrentPageIndex(i);
+							} else if (i === totalFetched) {
+								await fetchNextPage();
+								setCurrentPageIndex(i);
+							} else {
+								// trigger background fetches until this page is available
+								for (let page = totalFetched; page <= i; page++) {
+									fetchNextPage();
+								}
+								setCurrentPageIndex(i);
+							}
+						}}
 					>
 						{i + 1}
 					</Button>

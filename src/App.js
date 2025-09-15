@@ -110,7 +110,7 @@ function App() {
 
           <Route path="/" element={<Home />}></Route>
           <Route path="/explore" element={<Explore />}></Route>
-          <Route path="/explore/:id" element={<Product />}></Route>
+          <Route path="/explore/:cardId" element={<Product />}></Route>
 
           {/* error */}
           <Route path="*" element={<p>Not found</p>} />

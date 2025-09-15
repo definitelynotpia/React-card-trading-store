@@ -66,17 +66,16 @@ export const useCardsInfinite = (pageSize = 15, maxPages = 25) => useInfiniteQue
 		const cacheKey = `cards-infinite-${pageParam}-${pageSize}`;
 		const cacheData = await localforage.getItem(cacheKey);
 		if (cacheData) {
-			console.log(cacheKey, "fetched from localforage!");
-			console.log("page", cacheData.page, "pageSize", cacheData.pageSize, "count", cacheData.count, "totalCount", cacheData.totalCount);
+			console.log(`localforage fetch Page ${cacheData.page}`);
 			return cacheData;
-		};
-
-		// if not cached, fetch from API and cache
-		const res = await api.get(`/cards?page=${pageParam}&pageSize=${pageSize}`);
-		const data = res.data;
-		console.log("page", data.page, "pageSize", data.pageSize, "count", data.count, "totalCount", data.totalCount);
-		await localforage.setItem(cacheKey, data);
-		return data;
+		} else {
+			// if not cached, fetch from API and cache
+			const res = await api.get(`/cards?page=${pageParam}&pageSize=${pageSize}`);
+			const data = res.data;
+			await localforage.setItem(cacheKey, data);
+			console.log(`API fetch: Page ${data.page}`);
+			return data;
+		}
 	},
 	getNextPageParam: (lastPage) => {
 		const totalPages = Math.ceil(lastPage.totalCount / lastPage.pageSize);
