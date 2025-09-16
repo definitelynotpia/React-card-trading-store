@@ -11,7 +11,7 @@ import CustomFooter from "./components/footer.js";
 // App screens
 import Home from "./screens/Home";
 import Explore from './screens/Explore';
-import Product from './screens/Product';
+import Listings from './screens/Listings';
 import Login from './screens/Login';
 import Register from './screens/Register';
 
@@ -110,7 +110,7 @@ function App() {
 
           <Route path="/" element={<Home />}></Route>
           <Route path="/explore" element={<Explore />}></Route>
-          <Route path="/explore/:cardId" element={<Product />}></Route>
+          <Route path="/explore/:cardId" element={<Listings />}></Route>
 
           {/* error */}
           <Route path="*" element={<p>Not found</p>} />

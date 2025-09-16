@@ -63,7 +63,7 @@
 }
 
 .card-type:hover {
-	transform: scale(1.2);
+	transform: scale(1.15);
 }
 
 .card-artist {
@@ -104,10 +104,49 @@
 .product-info>* {
 	margin: 0px 14px;
 	font-size: 1.15em;
+	padding: 3px 0px;
 }
 
 .product-info>*:not(:first-child) {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.product-name {
+	line-height: 0.9;
+	font-size: 24px;
+}
+
+.product-rule {
+	line-height: 1;
+}
+
+.product-level,
+.product-hp {
+	font-size: 1.4em;
+	font-weight: 500;
+}
+
+/* custom scrollbar */
+.product-column::-webkit-scrollbar,
+.listings-table::-webkit-scrollbar {
+	width: 8px;
+}
+
+.product-column::-webkit-scrollbar-track,
+.listings-table::-webkit-scrollbar-track {
+	background: rgb(0, 0, 0, 0.1);
+	border-radius: 4px;
+}
+
+.product-column::-webkit-scrollbar-thumb,
+.listings-table::-webkit-scrollbar-thumb {
+	background: #8accd3;
+	border-radius: 4px;
+}
+
+.product-column::-webkit-scrollbar-thumb:hover,
+.listings-table::-webkit-scrollbar-thumb:hover {
+	background: #99dde4;
 }
 
 /* override React Bootstrap CSS */
@@ -121,21 +160,28 @@
 
 .accordion-button.collapsed {
 	background-color: #f3f3f3 !important;
-	padding: 6px 20px 6px 20px !important;
+	padding-right: 15px !important;
+	padding-left: 15px !important;
+	height: 30px !important;
 	border-radius: 0px !important;
 }
 
 .accordion-button:not(.collapsed) {
 	background-color: #f3f3f3 !important;
 	border-radius: 0px !important;
-	padding: 6px 20px 6px 20px !important;
+	padding-right: 15px !important;
+	padding-left: 15px !important;
+	height: 30px !important;
 }
 
 .accordion-body {
+	margin: 0px !important;
+	padding: 10px calc(50% - 117.5px) !important;
+}
+
+.accordion-body>* {
 	scale: 0.9;
 	width: 235px;
-	padding: 0px !important;
-	margin: 0px !important;
 }
 
 .accordion-button>p {
@@ -155,6 +201,7 @@
 
 /* listings */
 .listings-table {
-	margin-left: 20px;
+	height: 90vh !important;
+	width: calc(100vw - 260px) !important;
 	overflow-y: scroll;
 }

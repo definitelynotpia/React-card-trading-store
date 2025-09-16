@@ -1,9 +1,10 @@
 import "../App.css";
 import "../styles/explore.css";
 // react
-import { playCardFlipSfx } from "../utils/sfx";
+import { playCardFlipSfx } from "../utils/sfx.js";
 import { OverlayTrigger, Tooltip, Accordion } from "react-bootstrap";
 import { CardFront, CardBack } from "../components/card.js";
+import { IoMdStar } from "react-icons/io";
 // routing
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -20,13 +21,17 @@ import PsychicIcon from "../assets/card-icons/psychic.png";
 import MetalIcon from "../assets/card-icons/steel.png";
 import WaterIcon from "../assets/card-icons/water.png";
 
-function Product() {
+export default function Listings() {
 	const location = useLocation();
 	const card = location.state?.card; // 👈 read card from Link state
+
 	// card info
-	const fetchedPrice = card.cardmarket?.prices.trendPrice;
-	const convertedPrice = fetchedPrice * 63; // EUR to PHP manual conversion ?
-	const price = (Math.round(convertedPrice * 100) / 100).toFixed(2);
+	const fetchedUsdPrice = card.tcgPlayer?.prices?.holofoil?.market || card.tcgPlayer?.prices?.reverseHolofoil?.market || 0;
+	const fetchedEurPrice = card.cardmarket?.prices.trendPrice;
+	const priceEur = (Math.round(fetchedEurPrice * 100) / 100).toFixed(2); // EUR to PHP manual conversion ?
+	const priceUsd = (Math.round(fetchedUsdPrice * 100) / 100).toFixed(2); // USD to PHP manual conversion ?
+	const convertedEurPrice = (Math.round((fetchedEurPrice * 63) * 100) / 100).toFixed(2); // EUR to PHP manual conversion ?
+	const convertedUsdPrice = (Math.round((fetchedUsdPrice * 51) * 100) / 100).toFixed(2); // USD to PHP manual conversion ?
 
 	// ui state
 	const typeIcons = {
@@ -46,7 +51,8 @@ function Product() {
 	const [grabbingCard, setGrabbingCard] = useState(null);
 	const [flippedCard, setFlippedCard] = useState(false);
 	// accordion
-	const [activeKey, setActiveKey] = useState("0");
+	const [showCard, setShowCard] = useState("0");
+	const [listingActiveKey, setListingActiveKey] = useState("0");
 
 	const toggleFlip = () => {
 		setFlippedCard(prev => !prev);
@@ -57,10 +63,10 @@ function Product() {
 	}
 
 	return (<div className="listings-column d-flex flex-row">
-		<Accordion className="product-column" activeKey={activeKey} onSelect={setActiveKey} >
+		<Accordion className="product-column pb-4" activeKey={showCard} onSelect={setShowCard} >
 			<Accordion.Item eventKey="0">
 				<Accordion.Header >
-					<p>{activeKey === "0" ? "Hide card" : "Show card"}</p>
+					<p>{showCard === "0" ? "Hide card" : "Show card"}</p>
 				</Accordion.Header>
 				<Accordion.Body>
 					<div className={`flip-card ${grabbingCard === card.id ? 'grabbing' : ''} `}
@@ -87,36 +93,61 @@ function Product() {
 			</Accordion.Item>
 
 			<div className="product-info">
-				<div className="d-flex flex-row justify-content-start align-items-center my-2 p-0">
-					<h4 className="card-name fw-bold my-0 px-0 py-1"
-						style={{ maxWidth: `calc(222px - ${28 * card.types.length}px)` }}
-					>{card.name}</h4>
-					{card.level && <p className="card-level ms-1 mx-2 my-0 px-0 py-1">Lvl {card.level}</p>}
+				<div className={`product-name fw-bold p-0 mb-2 ${showCard === "0" ? "mt-0" : "mt-3"}`}>{card.name}</div>
+
+				<div className="d-flex flex-row justify-content-between align-items-center p-0">
+					{card.hp && <div className="d-flex flex-row align-items-center">
+						<p className="attribute-name m-0 p-0 me-1">HP</p>
+						<p className="product-hp m-0 p-0">{card.hp}</p>
+					</div>}
+					{card.level && <div className="d-flex flex-row align-items-center">
+						<p className="attribute-name m-0 p-0 me-1">LVL</p>
+						<p className="product-level m-0 p-0">{card.level}</p>
+					</div>}
+
+					{card.types && (
+						<div className="d-flex flex-row align-items-center">
+							<p className="me-2 attribute-name">{card.types.length > 1 ? "TYPES" : "TYPE"}</p>
+							<div className="d-flex flex-row flex-wrap justify-content-end align-items-center">
+								{card.types?.map((type, i) => (
+									<OverlayTrigger key={`${card.id}-type-${i}`} placement="right"
+										overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{type}</Tooltip>} >
+										<img alt={type} src={typeIcons[type]} width="28px"
+											className="card-type p-0 mx-0 my-1" />
+									</OverlayTrigger>
+								))}
+							</div>
+						</div>
+					)}
 				</div>
 
 				<div className="d-flex flex-row justify-content-between align-items-center">
-					<p className="me-2 attribute-name">Trend Price</p>
-					<p className="custom-badge me-1">Php {price}</p>
+					<p className="attribute-name">Trend Price</p>
+					<div>
+						<OverlayTrigger placement="right" className="m-0 p-0" overlay={<Tooltip>based on global trend</Tooltip>} >
+							<p className="m-0 p-0">€{priceEur}
+								<span className="ms-1" style={{ fontWeight: "500" }}>(₱{convertedEurPrice})</span>
+							</p>
+						</OverlayTrigger>
+						{priceUsd !== 0 ?? <p className="m-0 p-0">${priceUsd}
+							<span className="ms-1" style={{ fontWeight: "500" }}>(₱{convertedUsdPrice})</span>
+						</p>}
+					</div>
 				</div>
 
 				<div className="d-flex flex-row justify-content-between align-items-center">
 					<p className="me-2 attribute-name">Set</p>
-					<p className="custom-badge me-1">{card.set?.name}</p>
-				</div>
-
-				<div className="d-flex flex-row justify-content-between align-items-center">
-					<p className="me-2 attribute-name">Artist</p>
-					<p className="card-artist custom-badge me-1">{card.artist || "Unknown"}</p>
+					<p className="m-0 p-0">{card.set?.name}</p>
 				</div>
 
 				<div className="d-flex flex-row justify-content-between align-items-center">
 					<p className="me-2 attribute-name">Rarity</p>
-					<p className="custom-badge me-1">{card.rarity || "Unknown"}</p>
+					<p className="m-0 p-0">{card.rarity || "Unknown"}</p>
 				</div>
 
 				<div className="d-flex flex-row justify-content-between align-items-center">
 					<p className="me-2 attribute-name">Supertype</p>
-					<p className="custom-badge me-1">{card.supertype}</p>
+					<p className="m-0 p-0">{card.supertype}</p>
 				</div>
 
 				{card.subtypes && (
@@ -132,40 +163,14 @@ function Product() {
 					</div>
 				)}
 
-				{card.hp && (
-					<div className="d-flex flex-row justify-content-between align-items-center">
-						<p className="me-2 attribute-name">HP</p>
-						<p className="custom-badge me-1">{card.hp}</p>
-					</div>
-				)}
-
-				{card.types && (
-					<div className="d-flex flex-row justify-content-between align-items-center">
-						<p className="me-2 attribute-name">{card.types.length > 1 ? "Types" : "Type"}</p>
-						<div className="d-flex flex-row flex-wrap justify-content-end align-items-center">
-							{card.types.map((type, i) => (
-								<p key={`${card.id}-type-${i}`} className="m-0 p-0">
-									{card.types?.map((type, i) => (
-										<OverlayTrigger key={`${card.id}-type-${i}`} placement="right"
-											overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{type}</Tooltip>} >
-											<img alt={type} src={typeIcons[type]} width="28px"
-												className="card-type p-0 mx-0 my-1" />
-										</OverlayTrigger>
-									))}
-								</p>
-							))}
-						</div>
-					</div>
-				)}
-
 				{card.weaknesses && (
 					<div className="d-flex flex-row justify-content-between align-items-center">
-						<p className="me-2 attribute-name">{card.weaknesses.length > 1 ? "Weaknesses" : "Weakness"}</p>
+						<p className="me-2 attribute-name">Weaknesses</p>
 						<div className="d-flex flex-row flex-wrap justify-content-end">
 							{card.weaknesses.map((weakness, i) => (
 								<OverlayTrigger key={`${card.id}-weakness-${i}`} placement="right"
 									overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{weakness.type}</Tooltip>} >
-									<div className={card.weaknesses.length > 1 && i < card.weaknesses.length ? "me-2" : ""}>
+									<div className={card.weaknesses.length > 1 && i < (card.weaknesses.length - 1) ? "me-2" : ""}>
 										<img alt={weakness.type} src={typeIcons[weakness.type]} width="28px"
 											className="card-type p-0 mx-0 my-1" />
 										{weakness.value}
@@ -180,10 +185,15 @@ function Product() {
 					<div className="d-flex flex-row justify-content-between align-items-center">
 						<p className="me-2 attribute-name">Resistances</p>
 						<div className="d-flex flex-row flex-wrap justify-content-end">
-							{card.resistances.map((res, i) => (
-								<p key={`${card.id}-res-${i}`} className="custom-gradient-badge me-1 my-1">
-									{res.type} {res.value}
-								</p>
+							{card.resistances.map((resistance, i) => (
+								<OverlayTrigger key={`${card.id}-resistance-${i}`} placement="right"
+									overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{resistance.type}</Tooltip>} >
+									<div className={card.resistances.length > 1 && i < (card.resistances.length - 1) ? "me-2" : ""}>
+										<img alt={resistance.type} src={typeIcons[resistance.type]} width="28px"
+											className="card-type p-0 mx-0 my-1" />
+										{resistance.value}
+									</div>
+								</OverlayTrigger>
 							))}
 						</div>
 					</div>
@@ -194,32 +204,41 @@ function Product() {
 						<p className="me-2 attribute-name">Retreat Cost</p>
 						<div className="d-flex flex-row flex-wrap justify-content-end">
 							{card.retreatCost.map((cost, i) => (
-								<p key={`${card.id}-retreat-${i}`} className="custom-gradient-badge me-1 my-1">
-									{cost}
-								</p>
+								<OverlayTrigger key={`${card.id}-retreatCost-${i}`} placement="right"
+									overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{cost}</Tooltip>} >
+									<img alt={cost} src={typeIcons[cost]} width="28px" className="card-type p-0 mx-0 my-1" />
+								</OverlayTrigger>
 							))}
 						</div>
 					</div>
 				)}
 
+				<div className="d-flex flex-row justify-content-between align-items-center">
+					<p className="me-2 attribute-name">Artist</p>
+					<p className="m-0 p-0">{card.artist || "Unknown"}</p>
+				</div>
+
 				{card.rules && (
-					<div className="d-flex flex-column mt-2">
-						<p className="attribute-name">Rules</p>
+					<div className="d-flex flex-column">
+						<p className="attribute-name mt-2 mb-1">{card.rules.length > 1 ? "Card Rules" : "Card Rule"}</p>
 						{card.rules.map((rule, i) => (
-							<p key={`${card.id}-rule-${i}`} className="small text-muted">
-								{rule}
-							</p>
+							<div className="d-flex flex-row justify-content-start align-items-start pt-2">
+								<IoMdStar size={15} color="#7932b7" className="me-1" />
+								<p key={`${card.id}-rule-${i}`} className="product-rule">{rule}</p>
+							</div>
 						))}
 					</div>
 				)}
 			</div>
 		</Accordion>
 
-		<div className="listings-table" style={{ flex: 1 }}>
-			<h3>Seller Listings</h3>
-			<p>🚧 Listings coming soon...</p>
-		</div>
+		<Accordion className="listings-table" activeKey={listingActiveKey} onSelect={setListingActiveKey} >
+			{Array.from({ length: 20 }, (listing, i) => (
+				<Accordion.Item eventKey={i}>
+					<Accordion.Header>Listing #{i + 1}</Accordion.Header>
+					<Accordion.Body>Listing #{i + 1}</Accordion.Body>
+				</Accordion.Item>
+			))}
+		</Accordion>
 	</div>);
 }
-
-export default Product;

@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import parse from "html-react-parser";
+import parse, { domToReact } from "html-react-parser";
 
 // inject custom gradient into icon svg
 function convertToLinearGradient(str) {
@@ -21,15 +21,30 @@ function convertToLinearGradient(str) {
 
   // fill all icon paths
   return finalStr
-    .replace(/fill="none"/g, "") // remove "none"
+    .replace(/fill="none"/g, "")
     .replace(/stroke="currentColor"/g, 'stroke="url(#myGradient)"')
     .replace(/fill="currentColor"/g, 'fill="url(#myGradient)"')
-    .replace(/stroke="[^"]*"/g, 'stroke="url(#myGradient)"'); // catch any stroke color
+    .replace(/stroke="[^"]*"/g, 'stroke="url(#myGradient)"');
 }
 
 // Render chosen icon as raw SVG string
-export default function GradientIcon({ Icon, size = 64 }) {
+export default function GradientIcon({ Icon, size = 64, onClick }) {
   const rawSvg = renderToStaticMarkup(<Icon size={size} />);
   const gradientSvg = convertToLinearGradient(rawSvg);
-  return <>{parse(gradientSvg)}</>;
+
+  return parse(gradientSvg, {
+    replace: (domNode) => {
+      if (domNode.name === "svg") {
+        return (
+          <svg
+            {...domNode.attribs}
+            onClick={onClick}
+            style={{ cursor: onClick ? "pointer" : undefined }}
+          >
+            {domToReact(domNode.children)}
+          </svg>
+        );
+      }
+    },
+  });
 }

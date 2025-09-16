@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // react-icons
 import { LuChevronFirst, LuChevronLast, LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { FaHeart } from "react-icons/fa";
 // api fetch
 import { useCardsInfinite } from "../services/pokemonQueries";
 // card type icons
@@ -57,6 +58,7 @@ export default function Products() {
 	// ui state
 	const [grabbingCard, setGrabbingCard] = useState(null);
 	const [flippedCards, setFlippedCards] = useState({});
+	const [favCards, setFavCards] = useState({});
 	// map icon to card type
 	const typeIcons = {
 		Colorless: ColorlessIcon,
@@ -74,6 +76,13 @@ export default function Products() {
 
 	const toggleFlip = (cardId) => {
 		setFlippedCards(prev => ({
+			...prev,
+			[cardId]: !prev[cardId]
+		}));
+	};
+
+	const toggleFav = (cardId) => {
+		setFavCards(prev => ({
 			...prev,
 			[cardId]: !prev[cardId]
 		}));
@@ -247,7 +256,10 @@ export default function Products() {
 							</div>
 
 							<div className="d-flex flex-row justify-content-center align-items-center mt-3 mb-1">
-								<Link to={`/explore/${card.id}`} state={{ card }} className="listings w-100">
+								{favCards[card.id] ?
+									<FaHeart onClick={() => toggleFav(card.id)} size={28} color="red" /> :
+									<FaHeart onClick={() => toggleFav(card.id)} size={28} color="#0000003d" />}
+								<Link to={`/explore/${card.id}`} state={{ card }} className="listings w-100 ms-2">
 									<Button variant="outline-dark" className="w-100">View Listings</Button>
 								</Link>
 							</div>
@@ -257,7 +269,7 @@ export default function Products() {
 		</div>
 
 		<Pagination>
-			<div className="btn-container d-flex justify-content-evenly align-items-center mt-5">
+			<div className="btn-container d-flex justify-content-evenly align-items-center my-4">
 				<Button variant="light" disabled={currentPageIndex === 0} onClick={() => setCurrentPageIndex(0)}>
 					<LuChevronFirst size={16} color="black" style={{ marginBottom: "1.5px" }} /> Last
 				</Button>
@@ -267,32 +279,32 @@ export default function Products() {
 				</Button>
 
 				{Array.from({ length: cappedTotalPages }, (_, i) => (
-					<Button
-						key={i}
-						variant="light"
-						className={currentPageNumber === i + 1 ? "current-page" : ""}
-						disabled={isFetching || currentPageIndex === i}
+					<Button key={i} variant="light" className={currentPageNumber === i + 1 ? "current-page" : ""}
+						disabled={isFetching && currentPageIndex === i}
 						onClick={async () => {
-							// get number of current total fetched pages
 							const totalFetched = data?.pages.length ?? 0;
+
 							if (i < totalFetched) {
-								// If the page is already cached, just jump to it
+								// if cached, jump to
 								setCurrentPageIndex(i);
-							} else if (i === totalFetched) {
-								await fetchNextPage();
-								setCurrentPageIndex(i);
-							} else {
-								// trigger background fetches until this page is available
-								for (let page = totalFetched; page <= i; page++) {
-									fetchNextPage();
+								return;
+							}
+							if (i >= totalFetched) {
+								let pageToFetch = totalFetched;
+								// only keep fetching while more pages exist
+								while (pageToFetch <= i) {
+									if (hasMorePages) {
+										await fetchNextPage();
+									}
+									pageToFetch++;
 								}
 								setCurrentPageIndex(i);
 							}
-						}}
-					>
+						}}>
 						{i + 1}
 					</Button>
 				))}
+
 
 				<Button variant="light" disabled={(!hasNextCachedPage && !hasMorePages)}
 					onClick={() => {
