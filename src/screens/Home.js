@@ -29,8 +29,8 @@ export default function Home() {
 			</div>
 
 			<div className="hero-section-platform">
-				<img alt="Jigglypuff" className="hero-section-pokemon jigglypuff" src={Jigglypuff} draggable="false" />
-				<img alt="Pikachu" id="hero-section-pokemon pikachu" className="hero-section-pokemon pikachu flip-image" src={Pikachu} draggable="false" />
+				<img alt="Jigglypuff" className="hero-section-pokemon jigglypuff" src={Jigglypuff} draggable="false" onContextMenu={(e) => e.preventDefault()} />
+				<img alt="Pikachu" id="hero-section-pokemon pikachu" className="hero-section-pokemon pikachu flip-image" src={Pikachu} draggable="false" onContextMenu={(e) => e.preventDefault()} />
 			</div>
 		</div>
 

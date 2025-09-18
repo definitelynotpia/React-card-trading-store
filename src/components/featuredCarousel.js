@@ -132,6 +132,7 @@ export default function FeaturedCarousel() {
                                         style={{ width: "100%", height: "100%", borderRadius: "0.6rem" }}
                                     >
                                         <Card.Img variant="top" src={card.images.large} alt={card.name}
+                                            onContextMenu={(e) => e.preventDefault()}
                                             draggable="false" className={`img ${position}`}
                                             style={{ borderRadius: "0.6rem", margin: "auto" }}
                                         />
