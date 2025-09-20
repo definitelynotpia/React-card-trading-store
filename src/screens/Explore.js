@@ -53,12 +53,12 @@ export default function Explore() {
     ];
 
     return (<div className="content">
-        <div className="d-flex flex-row justify-content-center align-items-center my-3">
+        <div className="d-flex flex-row justify-content-center align-items-center">
             <GradientIcon size={40} Icon={CgPokemon} />
             <h1 className="gradient-text h2 ms-2">Explore Cards</h1>
         </div>
 
-        <div className="tab-container d-flex justify-content-center align-items-center align-self-center my-2">
+        {false && <div className="tab-container d-flex justify-content-center align-items-center align-self-center my-2">
             {tabList.map((tab, id) => (
                 <div
                     key={tab.eventKey}
@@ -69,36 +69,36 @@ export default function Explore() {
                     {tab.tabTitle}
                 </div>
             ))}
-        </div>
 
-        <div className="d-flex flex-row justify-content-center align-items-center my-3">
-            {filterList.map((filterItem, id) => (
-                <Dropdown key={id} >
-                    <Dropdown.Toggle className={`filter-options ${id !== filterList.lastIndexOf ? "me-2" : ""}`}>
-                        {filterItem.text}
-                    </Dropdown.Toggle>
+            <div className="d-flex flex-row justify-content-center align-items-center my-3">
+                {filterList.map((filterItem, id) => (
+                    <Dropdown key={id} >
+                        <Dropdown.Toggle className={`filter-options ${id !== filterList.lastIndexOf ? "me-2" : ""}`}>
+                            {filterItem.text}
+                        </Dropdown.Toggle>
 
-                    <Dropdown.Menu style={{ background: "#ffffffff" }}>
-                        {filterItem.list.length > 10 && <input className="filter-search" placeholder="Search items..." />}
+                        <Dropdown.Menu style={{ background: "#ffffffff" }}>
+                            {filterItem.list.length > 10 && <input className="filter-search" placeholder="Search items..." />}
 
-                        <div className="filter-list-container">
-                            {filterItem.list.map((item, i) => {
-                                if (filterItem.list.length < 1) {
-                                    return (<Dropdown.Item className="filter-list-item">
-                                        Loading...
-                                    </Dropdown.Item>);
-                                }
-                                return (
-                                    <Dropdown.Item key={i} className="filter-list-item">
-                                        {item.name || item}
-                                    </Dropdown.Item>
-                                );
-                            })}
-                        </div>
-                    </Dropdown.Menu>
-                </Dropdown>
-            ))}
-        </div>
+                            <div className="filter-list-container">
+                                {filterItem.list.map((item, i) => {
+                                    if (filterItem.list.length < 1) {
+                                        return (<Dropdown.Item className="filter-list-item">
+                                            Loading...
+                                        </Dropdown.Item>);
+                                    }
+                                    return (
+                                        <Dropdown.Item key={i} className="filter-list-item">
+                                            {item.name || item}
+                                        </Dropdown.Item>
+                                    );
+                                })}
+                            </div>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                ))}
+            </div>
+        </div>}
 
         <div className="tab-content">
             <Products />

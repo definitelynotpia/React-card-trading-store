@@ -96,28 +96,34 @@
   background: #73bec7 !important;
 }
 
+/* back button */
+.back-btn {
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  cursor: pointer;
+  color: #235D64;
+}
+
 /* GRADIENT MASKING */
 .gradient-text {
-  background: linear-gradient(to bottom, #235D64 0%, #70B8C1 100%);
+  background: linear-gradient(to bottom, #235D64 0%, #76c1cd 80%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold !important;
+  padding: 10px 0px;
 }
 
-.gradient-text.h1 {
+.header-1 {
   font-size: 45px !important;
+  padding: 0;
 }
 
 .gradient-text.h2 {
   font-size: 36px !important;
-}
-
-.gradient-image {
-  background: linear-gradient(to bottom, #235D64 0%, #70B8C1 100%) !important;
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+  padding: 0;
 }
 
 /* CUSTOM TAB FOR PRODUCTS */
@@ -308,44 +314,77 @@ footer {
   height: 100%;
 }
 
-.footer-links>* {
-  font-size: 12px;
-  margin: 6px 0px;
+.footer-links * {
+  font-size: 13px;
+  margin: 4px 0px;
   color: gray;
+  text-decoration: none;
 }
 
-.footer-links>p:hover {
-  color: #77c0c9;
+.footer-links a:hover {
+  color: #77c0c9 !important;
 }
 
 .footer-socials>*:hover {
-  color: #77c0c9;
+  color: #77c0c9 !important;
 }
 
 /* BLURRED ELLIPSE */
 .blob {
   border-radius: 50%;
-  filter: blur(150px);
   mix-blend-mode: multiply;
   animation: float 20s infinite ease-in-out;
-  z-index: 0;
+  z-index: 1;
 }
 
 .blob.blue {
   position: absolute;
-  width: 30vw;
-  height: 10vh;
-  background: #3F848D;
-  left: 50%;
-  top: 60%;
+  filter: blur(130px);
+  width: 40vw;
+  height: 20vh;
+  background: #218fa3;
+  left: 0%;
+  top: 80%;
   transform: translateX(-50%);
 }
 
-/* .blob.purple {
+.blob.purple {
+  position: absolute;
+  filter: blur(130px);
+  width: 16vw;
+  height: 16vw;
+  background: rgba(128, 43, 121);
+  top: -28%;
+  left: 85%;
+}
+
+/* custom tooltip */
+.tooltip {
+  /* prevent overflow glitch (causes scrollbar to appear) */
   position: fixed;
-  width: 30vw;
-  height: 40vw;
-  background: rgba(110, 73, 107);
-  top: -70%;
-  left: 70%;
-} */
+}
+
+.tooltip .tooltip-inner {
+  background: linear-gradient(to bottom, #218fa3, #235D64) !important;
+  color: #fff !important;
+  font-size: 14px;
+  border-radius: 6px;
+  padding: 0px 6px 2px 6px;
+}
+
+/* arrow color */
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: #235D64 !important;
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: #235D64 !important;
+}
+
+.tooltip.bs-tooltip-start .tooltip-arrow::before {
+  border-left-color: #235D64 !important;
+}
+
+.tooltip.bs-tooltip-end .tooltip-arrow::before {
+  border-right-color: #235D64 !important;
+}

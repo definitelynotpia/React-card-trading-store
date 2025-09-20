@@ -54,6 +54,11 @@
 	text-overflow: ellipsis;
 }
 
+.card-set {
+	max-height: 50px !important;
+	max-width: 50% !important;
+}
+
 .card-level {
 	font-size: 0.85em;
 	font-weight: 500;
@@ -90,15 +95,19 @@
 }
 
 /* product page */
-
 .listings-column {
-	padding-top: 10vh;
+	overflow: hidden !important;
+}
+
+.listings-column>* {
+	height: 90vh;
 }
 
 .product-column {
-	height: 90vh;
+	padding-top: 10vh !important;
 	width: 260px;
 	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .product-info>* {
@@ -140,13 +149,13 @@
 
 .product-column::-webkit-scrollbar-thumb,
 .listings-table::-webkit-scrollbar-thumb {
-	background: #8accd3;
+	background: #7ca7ad;
 	border-radius: 4px;
 }
 
 .product-column::-webkit-scrollbar-thumb:hover,
 .listings-table::-webkit-scrollbar-thumb:hover {
-	background: #99dde4;
+	background: #92bdc2;
 }
 
 /* override React Bootstrap CSS */
@@ -200,8 +209,54 @@
 }
 
 /* listings */
+.listings-control {
+	height: 10vh;
+	z-index: 9999;
+}
+
 .listings-table {
-	height: 90vh !important;
+	height: calc(90vh - 48px) !important;
 	width: calc(100vw - 260px) !important;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: auto;
+	align-content: start;
+	justify-content: start;
+	gap: 15px;
+	padding: 15px;
+	padding-top: 2px;
 	overflow-y: scroll;
+}
+
+.listing-card {
+	position: relative;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.135);
+	border-radius: 10px;
+	padding: 12px;
+	padding-left: 138px;
+	height: 150px;
+}
+
+/* listing content */
+.listing-thumb {
+	position: absolute;
+	object-fit: cover;
+	top: 0;
+	left: 0;
+	width: 150px;
+	height: 150px;
+	border-radius: 6px !important;
+	padding: 8px;
+}
+
+.listing-images-count {
+	position: absolute;
+	background: white;
+	color: black;
+	font-size: 10px;
+	font-weight: 500;
+	padding: 1px 3px;
+	border-radius: 3px;
+	left: 120px;
+	bottom: 0px;
 }

@@ -268,8 +268,8 @@ export default function Products() {
 				}))}
 		</div>
 
-		<Pagination>
-			<div className="btn-container d-flex justify-content-evenly align-items-center my-4">
+		<Pagination className="my-5">
+			<div className="btn-container d-flex justify-content-evenly align-items-center">
 				<Button variant="light" disabled={currentPageIndex === 0} onClick={() => setCurrentPageIndex(0)}>
 					<LuChevronFirst size={16} color="black" style={{ marginBottom: "1.5px" }} /> Last
 				</Button>

@@ -1,0 +1,80 @@
+.auth-form {
+	height: 100vh;
+}
+
+.top-carousel {
+	position: absolute !important;
+}
+
+.seller-form {
+	width: 800px;
+	height: 350px;
+	display: flex;
+	flex-direction: row;
+	background: white;
+	border-radius: 10px !important;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.seller-form>*:last-child {
+	width: 40%;
+	background: linear-gradient(to bottom, #77c0c9 0%, #74bbc4 100%);
+	border-bottom-right-radius: 10px;
+	border-top-right-radius: 10px;
+	object-fit: cover;
+}
+
+.seller-form>*:first-child {
+	width: 60%;
+	padding: 20px 40px;
+	margin: 0px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+.prompt {
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.auth-form a {
+	font-weight: 500 !important;
+	margin-left: 5px !important;
+}
+
+.prompt>*>* {
+	margin-bottom: 3px;
+}
+
+form {
+	width: 310px;
+	margin-top: 20px;
+	margin-bottom: 45px;
+}
+
+input {
+	border: 1px solid rgba(0, 0, 0, 0.25) !important;
+}
+
+label:not(:last-child) {
+	font-size: 12px;
+	font-weight: 500;
+	margin: 5px 2px !important;
+}
+
+label:not(:last-child) * {
+	font-size: 12px;
+	margin-left: 4px;
+}
+
+.password>*:first-child {
+	width: 91.5% !important;
+}
+
+.password>*:last-child {
+	margin-top: 28px;
+}
+
+.password-toggle:hover {
+	cursor: pointer;
+}

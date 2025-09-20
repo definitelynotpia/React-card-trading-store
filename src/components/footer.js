@@ -2,6 +2,7 @@ import "../App.css";
 import { ReactComponent as FooterLogo } from "../logo-1.svg";
 import * as Icon from 'react-bootstrap-icons';
 import { Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export default function CustomFooter() {
 	return (
@@ -20,26 +21,26 @@ export default function CustomFooter() {
 				<Col className="col-auto mx-5">
 					<h5>Marketplace</h5>
 					<div className="footer-links">
-						<p>Explore</p>
-						<p>Trending</p>
-						<p>Shop</p>
-						<p>Auctions</p>
+						<p><Link to="/explore">Explore</Link></p>
+						<p><Link to="/">About</Link></p>
+						<p><Link to="/seller/onboard">Become a Seller</Link></p>
 					</div>
 				</Col>
 				<Col className="col-auto me-5">
 					<h5>Community</h5>
 					<div className="footer-links">
-						<p>Forum</p>
-						<p>Seller Invite System</p>
-						<p>Seller Directory</p>
-						<p>Report a Scammer</p>
+						<p><Link to="">FAQs</Link></p>
+						<p><Link to="">Seller Invite System</Link></p>
+						<p><Link to="">Seller Directory</Link></p>
+						<p><Link to="">Report a Scammer</Link></p>
 					</div>
 				</Col>
 				<Col className="col-auto">
 					<h5>About TradeBall</h5>
 					<div className="footer-links">
-						<p>Our Mission</p>
-						<p>Our Vision</p>
+						<p><Link to="">Our Mission</Link></p>
+						<p><Link to="">Our Vision</Link></p>
+						<p><Link to="">Resources</Link></p>
 					</div>
 				</Col>
 			</Row>

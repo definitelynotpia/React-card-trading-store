@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.6",
     "dotenv": "^16.5.0",
     "firebase": "^12.2.1",
+    "firebase-tools": "^14.17.0",
     "html-react-parser": "^5.2.6",
     "localforage": "^1.10.0",
     "react": "^19.1.0",

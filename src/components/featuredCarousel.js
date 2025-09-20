@@ -8,7 +8,7 @@ import { generateAvatar } from "../utils/avatar";
 // bootstrap
 import { Container, Col, Row, Button, Card } from "react-bootstrap";
 
-export default function FeaturedCarousel() {
+export default function FeaturedCarousel({ showInfo = true }) {
     // query cards
     const { data: featuredCards = [], isLoading, isError, error } = useCards(3);
 
@@ -84,13 +84,7 @@ export default function FeaturedCarousel() {
 
                                         <div className="featured-card-shadow"></div>
                                     </Card>
-
-                                    <Container className="mt-3 mb-2 d-flex flex-column justify-content-center">
-                                        <h6 className="p-0 m-0 text-center">Creating magic for you...</h6>
-                                        <p className="p-0 m-0 text-center">Please wait a moment.</p>
-                                    </Container>
                                 </Card>
-
                             </div>);
                         })}
                     </div>
@@ -137,31 +131,33 @@ export default function FeaturedCarousel() {
                                             style={{ borderRadius: "0.6rem", margin: "auto" }}
                                         />
 
-                                        <Row className="featured-label">
-                                            <Col className="col-auto m-0 p-0">
-                                                <p className="featured-title">Product title</p>
-                                                <p className="featured-user">@User</p>
-                                            </Col>
-                                            <Col className="col-auto">
-                                                <Row>
-                                                    <div
-                                                        className="avatar-container rounded-circle m-0 p-0"
-                                                        dangerouslySetInnerHTML={{ __html: avatarSvg }}
-                                                        style={{ width: "25px", height: "25px" }}
-                                                    />
-                                                </Row>
-                                            </Col>
-                                        </Row>
+                                        {showInfo && <>
+                                            <Row className="featured-label">
+                                                <Col className="col-auto m-0 p-0">
+                                                    <p className="featured-title">Product title</p>
+                                                    <p className="featured-user">@User</p>
+                                                </Col>
+                                                <Col className="col-auto">
+                                                    <Row>
+                                                        <div
+                                                            className="avatar-container rounded-circle m-0 p-0"
+                                                            dangerouslySetInnerHTML={{ __html: avatarSvg }}
+                                                            style={{ width: "25px", height: "25px" }}
+                                                        />
+                                                    </Row>
+                                                </Col>
+                                            </Row>
 
-                                        <Button className="m-0 py-1 blue-outline-btn align-self-center" style={{ scale: "0.8" }} onClick={(event) => {
-                                            event.stopPropagation(); // prevent carousel next
-                                            // insert redirect here
-                                        }}>View Card</Button>
+                                            <Button className="m-0 py-1 blue-outline-btn align-self-center" style={{ scale: "0.8" }} onClick={(event) => {
+                                                event.stopPropagation(); // prevent carousel next
+                                                // insert redirect here
+                                            }}>View Card</Button>
+                                        </>}
 
                                         <div className="featured-card-shadow"></div>
                                     </Card>
 
-                                    <Container className="mt-3 mb-2">
+                                    {showInfo && <Container className="mt-3 mb-2">
                                         <Row className="featured-desc">
                                             <Col className="col-auto auction-title">Current bid</Col>
                                             <Col className="col-auto auction-title">Ending in</Col>
@@ -170,7 +166,7 @@ export default function FeaturedCarousel() {
                                             <Col className="col-auto auction-content">45,000 PHP</Col>
                                             <Col className="col-auto auction-content">00h 00m 00s</Col>
                                         </Row>
-                                    </Container>
+                                    </Container>}
                                 </Card>
 
                             </div>

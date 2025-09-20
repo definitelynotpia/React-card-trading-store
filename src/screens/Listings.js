@@ -2,9 +2,9 @@ import "../App.css";
 import "../styles/explore.css";
 // react
 import { playCardFlipSfx } from "../utils/sfx.js";
-import { OverlayTrigger, Tooltip, Accordion } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Accordion, Button } from "react-bootstrap";
 import { CardFront, CardBack } from "../components/card.js";
-import { IoMdStar } from "react-icons/io";
+import { IoMdArrowBack, IoMdStar } from "react-icons/io";
 // routing
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -110,7 +110,7 @@ export default function Listings() {
 							<p className="me-2 attribute-name">{card.types.length > 1 ? "TYPES" : "TYPE"}</p>
 							<div className="d-flex flex-row flex-wrap justify-content-end align-items-center">
 								{card.types?.map((type, i) => (
-									<OverlayTrigger key={`${card.id}-type-${i}`} placement="right"
+									<OverlayTrigger key={`${card.id}-type-${i}`} placement="top"
 										overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{type}</Tooltip>} >
 										<img alt={type} src={typeIcons[type]} width="28px"
 											className="card-type p-0 mx-0 my-1" />
@@ -122,22 +122,25 @@ export default function Listings() {
 				</div>
 
 				<div className="d-flex flex-row justify-content-between align-items-center">
-					<p className="attribute-name">Trend Price</p>
+					<p className="me-2 attribute-name">Set</p>
+					{card.set &&
+						<OverlayTrigger placement="top" className="m-0 p-0" overlay={<Tooltip>{card.set.name}</Tooltip>} >
+							<img src={card.set.images.logo} alt={card.set.name} className="card-set m-0 p-0" />
+						</OverlayTrigger>}
+				</div>
+
+				<div className="d-flex flex-row justify-content-between align-items-center">
+					<OverlayTrigger placement="top" className="m-0 p-0" overlay={<Tooltip>based on global trends</Tooltip>} >
+						<p className="attribute-name">Trend Price</p>
+					</OverlayTrigger>
 					<div>
-						<OverlayTrigger placement="right" className="m-0 p-0" overlay={<Tooltip>based on global trend</Tooltip>} >
-							<p className="m-0 p-0">€{priceEur}
-								<span className="ms-1" style={{ fontWeight: "500" }}>(₱{convertedEurPrice})</span>
-							</p>
-						</OverlayTrigger>
+						<p className="m-0 p-0">€{priceEur}
+							<span className="ms-1" style={{ fontWeight: "500" }}>(₱{convertedEurPrice})</span>
+						</p>
 						{priceUsd !== 0 ?? <p className="m-0 p-0">${priceUsd}
 							<span className="ms-1" style={{ fontWeight: "500" }}>(₱{convertedUsdPrice})</span>
 						</p>}
 					</div>
-				</div>
-
-				<div className="d-flex flex-row justify-content-between align-items-center">
-					<p className="me-2 attribute-name">Set</p>
-					<p className="m-0 p-0">{card.set?.name}</p>
 				</div>
 
 				<div className="d-flex flex-row justify-content-between align-items-center">
@@ -168,7 +171,7 @@ export default function Listings() {
 						<p className="me-2 attribute-name">Weaknesses</p>
 						<div className="d-flex flex-row flex-wrap justify-content-end">
 							{card.weaknesses.map((weakness, i) => (
-								<OverlayTrigger key={`${card.id}-weakness-${i}`} placement="right"
+								<OverlayTrigger key={`${card.id}-weakness-${i}`} placement="top"
 									overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{weakness.type}</Tooltip>} >
 									<div className={card.weaknesses.length > 1 && i < (card.weaknesses.length - 1) ? "me-2" : ""}>
 										<img alt={weakness.type} src={typeIcons[weakness.type]} width="28px"
@@ -186,7 +189,7 @@ export default function Listings() {
 						<p className="me-2 attribute-name">Resistances</p>
 						<div className="d-flex flex-row flex-wrap justify-content-end">
 							{card.resistances.map((resistance, i) => (
-								<OverlayTrigger key={`${card.id}-resistance-${i}`} placement="right"
+								<OverlayTrigger key={`${card.id}-resistance-${i}`} placement="top"
 									overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{resistance.type}</Tooltip>} >
 									<div className={card.resistances.length > 1 && i < (card.resistances.length - 1) ? "me-2" : ""}>
 										<img alt={resistance.type} src={typeIcons[resistance.type]} width="28px"
@@ -204,7 +207,7 @@ export default function Listings() {
 						<p className="me-2 attribute-name">Retreat Cost</p>
 						<div className="d-flex flex-row flex-wrap justify-content-end">
 							{card.retreatCost.map((cost, i) => (
-								<OverlayTrigger key={`${card.id}-retreatCost-${i}`} placement="right"
+								<OverlayTrigger key={`${card.id}-retreatCost-${i}`} placement="top"
 									overlay={<Tooltip id={`tooltip-${card.id}-${i}`}>{cost}</Tooltip>} >
 									<img alt={cost} src={typeIcons[cost]} width="28px" className="card-type p-0 mx-0 my-1" />
 								</OverlayTrigger>
@@ -232,13 +235,44 @@ export default function Listings() {
 			</div>
 		</Accordion>
 
-		<Accordion className="listings-table" activeKey={listingActiveKey} onSelect={setListingActiveKey} >
-			{Array.from({ length: 20 }, (listing, i) => (
-				<Accordion.Item eventKey={i}>
-					<Accordion.Header>Listing #{i + 1}</Accordion.Header>
-					<Accordion.Body>Listing #{i + 1}</Accordion.Body>
-				</Accordion.Item>
-			))}
-		</Accordion>
+		<div>
+			<div className="listings-control d-flex flex-row justify-content-between align-items-center">
+				<div className="back-btn m-0 py-3 px-2 ms-1">
+					<IoMdArrowBack className="me-1 pb-1" size={20} />
+					<span>Return</span>
+				</div>
+			</div>
+
+			<Accordion className="listings-table" activeKey={listingActiveKey} onSelect={setListingActiveKey} >
+				{Array.from({ length: 4 }, (listing, i) => (
+					<div className="listing-card d-flex flex-row justify-content-between align-items-start">
+						<div className="listing-images me-3">
+							<img src={card.images.small} alt="Proof" className="listing-thumb" />
+							<p className="listing-images-count">10</p>
+						</div>
+
+						<div className="d-flex flex-column flex-grow-1">
+							<h6 className="listing-title">@listing.seller.username</h6>
+							<p className="seller-username small text-muted">listing.seller.address</p>
+							<p className="seller-description">listing.description</p>
+							<div className="tags d-flex flex-row flex-wrap">
+								tags and certs
+							</div>
+						</div>
+
+						<div className="listing-price text-end">
+							<h5 className="fw-bold">₱listing.price</h5>
+							<button className="btn btn-primary btn-sm mt-2">Add to Cart</button>
+						</div>
+
+					</div>
+
+					// <Accordion.Item eventKey={i}>
+					// 	<Accordion.Header>Listing #{i + 1}</Accordion.Header>
+					// 	<Accordion.Body>Listing #{i + 1}</Accordion.Body>
+					// </Accordion.Item>
+				))}
+			</Accordion>
+		</div>
 	</div>);
 }

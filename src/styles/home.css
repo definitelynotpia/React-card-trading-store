@@ -9,12 +9,12 @@
 }
 
 .hero-anchored-text {
-  margin-top: 12vh;
+  margin-top: 14vh;
 }
 
 .hero-section-text {
   width: auto !important;
-  margin: 0px;
+  margin-top: -10px;
   display: flex;
   align-self: center;
   justify-content: center;
@@ -168,6 +168,7 @@
 
 /* SERVICES */
 .services-list {
+  margin-top: 25px;
   padding: 8% 5% 4% 5%;
   background: white;
 }
@@ -176,7 +177,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, auto);
-  gap: 50px;
+  gap: 30px;
 }
 
 .service-card {
@@ -276,4 +277,8 @@
 .service-card-btn {
   border: none !important;
   background: transparent !important;
+}
+
+.service-img {
+  object-fit: cover;
 }
