@@ -11,7 +11,7 @@ import { useAuth } from "./services/authContext.js";
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
 import CustomFooter from "./components/footer.js";
 // icons
-import { BsCart, BsCartFill, BsBell, BsBellFill } from "react-icons/bs";
+import { BsCart, BsCartFill, BsHeart, BsHeartFill } from "react-icons/bs";
 // App screens
 import Home from "./screens/Home";
 import Explore from './screens/Explore';
@@ -20,6 +20,7 @@ import Login from './screens/Login';
 import Register from './screens/Register';
 import SellerOnboarding from "./screens/SellerOnboarding.js";
 import Profile from "./screens/Profile.js";
+import Favorites from "./screens/Favorites.js";
 
 function App() {
   const navigate = useNavigate();
@@ -38,7 +39,10 @@ function App() {
     console.log("set icon", iconId, hoverIcon[iconId]);
   };
   // select pathname
-  const hideLinks = /^\/explore\/[^/]+$/.test(location.pathname) || location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/seller/onboarding";
+  const atExploreListings = /^\/explore\/[^/]+$/.test(location.pathname);
+  const atFavorites = /^\/[^/]+\/favorites$/.test(location.pathname);
+  const atCart = /^\/[^/]+\/cart$/.test(location.pathname);
+  const atAuthForms = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/seller/onboarding";
 
   // when page scrolled on Home page, change navbar bg (transparent -> solid divor)
   const [navbarBg, setNavbarBg] = useState(false); useEffect(() => {
@@ -57,12 +61,12 @@ function App() {
         <Container fluid className="d-flex flex-row justify-content-between align-items-center mx-4 my-0">
           <div className="d-flex flex-row w-25">
             <Navbar.Brand>
-              <img src={navbarBg || hideLinks ? LogoLight : LogoDark} width="45%" height="auto" alt="TradeBall" onClick={() => navigate("/")} className="clickable-image m-0 p-0" />
+              <img src={navbarBg || atAuthForms ? LogoLight : LogoDark} width="45%" height="auto" alt="TradeBall" onClick={() => navigate("/")} className="clickable-image m-0 p-0" />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
           </div>
 
-          {!hideLinks && <div>
+          {!atAuthForms && <div>
             <Nav className="d-flex justify-content-center align-items-center">
               <Nav.Link>
                 <NavLink className="mx-2 text-black text-decoration-none" to="/">Home</NavLink>
@@ -75,16 +79,16 @@ function App() {
 
           <div className="d-flex justify-content-end align-items-center w-25">
             {user && userData ? <>
-              {/* <div className="nav-icon py-2 ms-3" onMouseEnter={() => { toggleIcon("bell") }}
-                onMouseLeave={() => { toggleIcon("bell") }}>
-                {hoverIcon["bell"] ?
-                  <BsBellFill size={20} /> :
-                  <BsBell size={20} />}
-              </div> */}
-              <div className="nav-icon py-2 ms-3" onMouseEnter={() => { toggleIcon("cart") }}
-                onMouseLeave={() => { toggleIcon("cart") }}>
-                <NavLink to={`${user.displayName}/cart/`}>
-                  {hoverIcon["cart"] ?
+              <div className="nav-icon py-2 ms-3">
+                <NavLink to={`${user.displayName}/favorites`}>
+                  {atFavorites ?
+                    <BsHeartFill size={20} /> :
+                    <BsHeart size={20} />}
+                </NavLink>
+              </div>
+              <div className="nav-icon py-2 ms-3">
+                <NavLink to={`${user.displayName}/cart`}>
+                  {atCart ?
                     <BsCartFill size={20} /> :
                     <BsCart size={20} />}
                 </NavLink>
@@ -124,6 +128,7 @@ function App() {
           {/* for user */}
           <Route path=":userDisplayName/profile" element={<Profile />}></Route>
           <Route path=":userDisplayName/cart" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:userDisplayName/cart</p>}></Route>
+          <Route path=":userDisplayName/favorites" element={<Favorites />}></Route>
           <Route path="seller/onboarding" element={<SellerOnboarding />}></Route>
           <Route path=":userDisplayName/store" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:userDisplayName/store</p>}></Route>
 
@@ -136,7 +141,7 @@ function App() {
         </Routes>
       </div>
 
-      {!hideLinks && <CustomFooter />}
+      {!atAuthForms && !atExploreListings && <CustomFooter />}
     </div>
   );
 }

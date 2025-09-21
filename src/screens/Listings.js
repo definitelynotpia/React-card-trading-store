@@ -6,8 +6,8 @@ import { OverlayTrigger, Tooltip, Accordion, Button } from "react-bootstrap";
 import { CardFront, CardBack } from "../components/card.js";
 import { IoMdArrowBack, IoMdStar } from "react-icons/io";
 // routing
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { use, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 // card type icons
 import DarknessIcon from "../assets/card-icons/dark.png";
 import DragonIcon from "../assets/card-icons/dragon.png";
@@ -22,6 +22,7 @@ import MetalIcon from "../assets/card-icons/steel.png";
 import WaterIcon from "../assets/card-icons/water.png";
 
 export default function Listings() {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const card = location.state?.card; // 👈 read card from Link state
 
@@ -236,15 +237,15 @@ export default function Listings() {
 		</Accordion>
 
 		<div>
-			<div className="listings-control d-flex flex-row justify-content-between align-items-center">
-				<div className="back-btn m-0 py-3 px-2 ms-1">
+			{/* <div className="listings-control d-flex flex-row justify-content-between align-items-center">
+				<Button className="bg-white text-black border-0 back-btn m-0 py-3 px-2 ms-1" onClick={() => {navigate(-1)}}>
 					<IoMdArrowBack className="me-1 pb-1" size={20} />
 					<span>Return</span>
-				</div>
-			</div>
+				</Button>
+			</div> */}
 
-			<Accordion className="listings-table" activeKey={listingActiveKey} onSelect={setListingActiveKey} >
-				{Array.from({ length: 4 }, (listing, i) => (
+			<div className="listings-table" activeKey={listingActiveKey} onSelect={setListingActiveKey} >
+				{Array.from({ length:7 }, (listing, i) => (
 					<div className="listing-card d-flex flex-row justify-content-between align-items-start">
 						<div className="listing-images me-3">
 							<img src={card.images.small} alt="Proof" className="listing-thumb" />
@@ -272,7 +273,7 @@ export default function Listings() {
 					// 	<Accordion.Body>Listing #{i + 1}</Accordion.Body>
 					// </Accordion.Item>
 				))}
-			</Accordion>
+			</div>
 		</div>
 	</div>);
 }

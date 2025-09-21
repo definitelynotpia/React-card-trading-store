@@ -100,11 +100,11 @@
 }
 
 .listings-column>* {
+	margin-top: 10vh !important;
 	height: 90vh;
 }
 
 .product-column {
-	padding-top: 10vh !important;
 	width: 260px;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -211,11 +211,10 @@
 /* listings */
 .listings-control {
 	height: 10vh;
-	z-index: 9999;
 }
 
 .listings-table {
-	height: calc(90vh - 48px) !important;
+	height: 90vh !important;
 	width: calc(100vw - 260px) !important;
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);

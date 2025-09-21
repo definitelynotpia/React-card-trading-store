@@ -3,16 +3,18 @@ import "../styles/auth.css";
 import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../services/authContext";
 
 export default function SellerOnboarding() {
 	const [code, setCode] = useState("");
+	const { user } = useAuth();
 
 	return (<div className="auth-form d-flex justify-content-center align-items-center">
 		<div className="seller-form">
 			<Form>
 				<div>
-					<h3 className="fw-bold m-0">Be a seller!</h3>
-					<p className="m-0">Enter your code to setup your store.</p>
+					<h3 className="fw-bold m-0">Got cards to trade?</h3>
+					<p className="m-0">Be a seller in just a few steps!</p>
 				</div>
 
 				<Form.Group controlId="formGroupPassword">
@@ -24,7 +26,7 @@ export default function SellerOnboarding() {
 
 				<div className="align-self-center">
 					<p className="prompt m-1 text-center">
-						<Link to="/" className="text-dark me-1">
+						<Link to={`/${user.displayName}/seller/invite-request`} className="text-dark me-1">
 							Request an Invitation
 						</Link>
 						from the TradeBall Team!

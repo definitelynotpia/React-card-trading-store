@@ -23,12 +23,17 @@ import ColorlessIcon from "../assets/card-icons/normal.png";
 import PsychicIcon from "../assets/card-icons/psychic.png";
 import MetalIcon from "../assets/card-icons/steel.png";
 import WaterIcon from "../assets/card-icons/water.png";
+import { useAuth } from "../services/authContext.js";
+import { collection, deleteDoc, doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "../services/firebase.js";
 
 export default function Products() {
-	const pageSize = 15;
-	const maxPages = 20;
+	// user
+	const { user, userData } = useAuth();
 
 	// query first 250 Pokemon cards
+	const pageSize = 15;
+	const maxPages = 20;
 	const { data,
 		fetchNextPage,
 		refetch,
@@ -81,11 +86,44 @@ export default function Products() {
 		}));
 	};
 
-	const toggleFav = (cardId) => {
-		setFavCards(prev => ({
-			...prev,
-			[cardId]: !prev[cardId]
-		}));
+	// update favorites according to user db
+	useEffect(() => {
+		if (!user) return; // if not logged in, do not fetch
+		// get list of favorites and update heart icons
+		const favRef = collection(db, "users", user.uid, "favorites");
+		const unsubscribe = onSnapshot(favRef, (snapshot) => {
+			const favs = {};
+			snapshot.forEach((doc) => {
+				favs[doc.id] = doc.data();
+			});
+			setFavCards(favs);
+		});
+
+		return () => unsubscribe();
+	}, [user]);
+
+	const toggleFav = async (card) => {
+		if (!user) return;
+
+		const favRef = doc(db, "users", user.uid, "favorites", card.id);
+		const isFav = !!favCards[card.id];
+		if (isFav) {
+			// update local state
+			setFavCards((prev) => {
+				const updated = { ...prev };
+				delete updated[card.id];
+				return updated;
+			});
+			// remove from Firestore
+			await deleteDoc(favRef);
+			alert("Removed", card.name, "to Favorites!");
+		} else {
+			// update local state
+			setFavCards((prev) => ({ ...prev, [card.id]: card }));
+			// add to Firestore
+			await setDoc(favRef, card);
+			alert("Added", card.name, "to Favorites!");
+		}
 	};
 
 	// always start at page 1
@@ -257,8 +295,8 @@ export default function Products() {
 
 							<div className="d-flex flex-row justify-content-center align-items-center mt-3 mb-1">
 								{favCards[card.id] ?
-									<FaHeart onClick={() => toggleFav(card.id)} size={28} color="red" /> :
-									<FaHeart onClick={() => toggleFav(card.id)} size={28} color="#0000003d" />}
+									<FaHeart onClick={() => toggleFav(card)} size={28} color="red" /> :
+									<FaHeart onClick={() => toggleFav(card)} size={28} color="#0000003d" />}
 								<Link to={`/explore/${card.id}`} state={{ card }} className="listings w-100 ms-2">
 									<Button variant="outline-dark" className="w-100">View Listings</Button>
 								</Link>
