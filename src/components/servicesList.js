@@ -66,7 +66,8 @@ export default function Services() {
 								</Button>
 							</Col>
 							<Col className="d-flex align-items-center w-50">
-								<Card.Img width="100%" height="100%" src={card.image} alt="Placeholder Image" className="service-img" />
+								<Card.Img width="100%" height="100%" src={card.image} alt="Placeholder Image" className="service-img"
+									onContextMenu={(e) => { e.preventDefault(); }} />
 							</Col>
 						</Row>
 					</Card>

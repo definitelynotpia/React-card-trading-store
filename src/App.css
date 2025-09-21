@@ -36,6 +36,7 @@
   padding: 0px !important;
 }
 
+
 .nav-bg {
   background: white !important;
   box-shadow: #06535d2e 0px 0px 5px !important;
@@ -45,6 +46,14 @@
 
 .navbar-btn {
   font-size: 12px !important;
+}
+
+.nav-icon:hover {
+  cursor: pointer;
+}
+
+.nav-icon * {
+  color: black !important;
 }
 
 /* Custom dark outlined button */
@@ -292,6 +301,21 @@
   border: 1px solid #c0a5ff !important;
   background: hsl(264, 100%, 93%) !important;
   font-weight: 500;
+}
+
+/* profile */
+.profile-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 100%;
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 100%;
 }
 
 /* FOOTER */

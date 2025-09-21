@@ -11,6 +11,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+// firebase
+import { AuthProvider } from "./services/authContext.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,7 +40,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <QueryClientProvider client={queryClient} >
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </QueryClientProvider>
     </Router>
   </React.StrictMode>

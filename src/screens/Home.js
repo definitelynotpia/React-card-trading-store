@@ -38,7 +38,7 @@ export default function Home() {
 							<Link to="/explore">
 								<Button variant="dark" className="rounded-pill ms-5">Shop now</Button>
 							</Link>
-							<Link to="/seller/onboard">
+							<Link to="/seller/onboarding">
 								<Button className="rounded-pill blue-outline-btn ms-3">I want to sell!</Button>
 							</Link>
 						</Col>

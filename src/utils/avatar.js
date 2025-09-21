@@ -2,10 +2,10 @@
 import { createAvatar } from '@dicebear/core';
 import { adventurer } from '@dicebear/collection';
 
-export const generateAvatar = async () => {
+export const generateAvatar = async (seed = "TradeBall") => {
     try {
         const avatar = createAvatar(adventurer, {
-            seed: "Hello",
+            seed: seed,
             radius: 50,
             backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
             backgroundType: ["gradientLinear", "solid"],
@@ -30,3 +30,68 @@ export const generateAvatar = async () => {
         return null;
     }
 }
+
+/*
+Options
+seed
+Type: string
+https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Felix
+
+flip
+Type: boolean (false, true)
+https://api.dicebear.com/9.x/adventurer-neutral/svg?flip=false
+
+rotate
+Type: integer (Minimum=0, Maximum=360)
+0, 90, 180, 270
+https://api.dicebear.com/9.x/adventurer-neutral/svg?rotate=0
+
+scale
+Type: integer (Minimum=0, Maximum=200)
+50, 100, 200
+https://api.dicebear.com/9.x/adventurer-neutral/svg?scale=50
+
+radius
+Type: integer (Minimum=0, Maximum=50)
+0, 10, 20, 30, 40, 50
+https://api.dicebear.com/9.x/adventurer-neutral/svg?radius=0
+
+size
+Type: integer (Minimum=1, 32, 48, 64, 80, 96)
+https://api.dicebear.com/9.x/adventurer-neutral/svg?size=32
+
+backgroundColor
+Type: array
+9e5622, 763900, ecad80, f2d3b1
+https://api.dicebear.com/9.x/adventurer-neutral/svg?backgroundColor=b6e3f4,c0aede,d1d4f9
+
+backgroundType
+Type: array
+gradientLinear, solid
+https://api.dicebear.com/9.x/adventurer-neutral/svg?backgroundType: gradientLinear,solid
+
+eyebrows
+Type: array
+variant01, variant02, variant03, variant04, variant05, variant06, variant07, variant08, variant09, variant10, variant11, variant12, variant13, variant14, variant15
+https://api.dicebear.com/9.x/adventurer-neutral/svg?eyebrows=variant01,variant02,variant03
+
+eyes
+Type: array
+variant01, variant02, variant03, variant04, variant05, variant06, variant07, variant08, variant09, variant10, variant11, variant12, variant13, variant14, variant15, variant16, variant17, variant18, variant19, variant20, variant21, variant22, variant23, variant24, variant25, variant26
+https://api.dicebear.com/9.x/adventurer-neutral/svg?eyes=variant01,variant02,variant03
+
+glasses
+Type: array
+variant01, variant02, variant03, variant04, variant05
+https://api.dicebear.com/9.x/adventurer-neutral/svg?glasses=variant01,variant02,variant03
+
+glassesProbability
+Type: integer (Minimum=0, Maximum=100)
+0, 100
+https://api.dicebear.com/9.x/adventurer-neutral/svg?glassesProbability=0
+
+mouth
+Type: array
+variant01, variant02, variant03, variant04, variant05, variant06, variant07, variant08, variant09, variant10, variant11, variant12, variant13, variant14, variant15, variant16, variant17, variant18, variant19, variant20, variant21, variant22, variant23, variant24, variant25, variant26, variant27, variant28, variant29, variant30
+https://api.dicebear.com/9.x/adventurer-neutral/svg?mouth=variant01,variant02,variant03
+*/
