@@ -1,0 +1,77 @@
+.profile {
+	/* width: 100vw; */
+	overflow: hidden;
+}
+
+.profile-bg {
+	background: linear-gradient(to bottom,
+			rgb(119, 192, 201) 0%,
+			rgb(199, 248, 255) 100%);
+}
+
+.profile-img {
+	width: 80%;
+	height: auto;
+	object-fit: cover;
+	border-radius: 100%;
+	border: 2px solid white;
+}
+
+.profile-info>* {
+	width: calc((100vw/12) * 1.7);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.profile-right-col,
+.profile-left-col {
+	height: 90vh !important;
+	margin-top: 10vh !important;
+	padding-top: 20px;
+}
+
+.profile-right-col p {
+	line-height: 115%;
+
+}
+
+.profile-left-col {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.seller-rating {
+	padding: 10px;
+}
+
+.seller-rating p {
+	margin: 0px;
+	padding: 0px;
+}
+
+.disclaimer {
+	font-size: 0.80em !important;
+	line-height: 112%;
+	padding-top: 6px !important;
+	text-align: center;
+}
+
+.avg-rating {
+	font-size: 58px;
+	font-weight: bold;
+	line-height: 100%;
+	text-align: center;
+}
+
+.reviews,
+.profile-listings {
+	max-height: 70vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.reviews>* {
+	padding: 15px 10px;
+	height: fit-content;
+}

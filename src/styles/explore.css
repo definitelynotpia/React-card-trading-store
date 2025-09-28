@@ -135,29 +135,6 @@
 	font-weight: 500;
 }
 
-/* custom scrollbar */
-.product-column::-webkit-scrollbar,
-.listings-table::-webkit-scrollbar {
-	width: 8px;
-}
-
-.product-column::-webkit-scrollbar-track,
-.listings-table::-webkit-scrollbar-track {
-	background: rgb(0, 0, 0, 0.1);
-	border-radius: 4px;
-}
-
-.product-column::-webkit-scrollbar-thumb,
-.listings-table::-webkit-scrollbar-thumb {
-	background: #7ca7ad;
-	border-radius: 4px;
-}
-
-.product-column::-webkit-scrollbar-thumb:hover,
-.listings-table::-webkit-scrollbar-thumb:hover {
-	background: #92bdc2;
-}
-
 /* override React Bootstrap CSS */
 .accordion>* {
 	border: none !important;
@@ -236,6 +213,10 @@
 	height: 150px;
 }
 
+.listing-card * {
+	margin: 0px;
+}
+
 /* listing content */
 .listing-thumb {
 	position: absolute;
@@ -258,4 +239,13 @@
 	border-radius: 3px;
 	left: 120px;
 	bottom: 0px;
+}
+
+.listing-title {
+	font-size: 18px;
+}
+
+.listing-seller {
+	color: gray;
+	/* font-weight: normal; */
 }

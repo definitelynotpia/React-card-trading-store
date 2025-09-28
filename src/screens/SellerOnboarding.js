@@ -1,13 +1,20 @@
 import "../App.css";
 import "../styles/auth.css";
 import { Form, Button } from "react-bootstrap";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../services/authContext";
 
 export default function SellerOnboarding() {
+	const navigate = useNavigate();
 	const [code, setCode] = useState("");
-	const { user } = useAuth();
+	const { user, loading } = useAuth();
+
+	useEffect(() => {
+		if (!loading && !user) {
+			navigate(`/login`);
+		}
+	}, [user, loading, navigate]);
 
 	return (<div className="auth-form d-flex justify-content-center align-items-center">
 		<div className="seller-form">

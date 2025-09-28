@@ -1,7 +1,7 @@
 import "../App.css";
 import "../styles/explore.css";
 // firebase
-import { collection, deleteDoc, doc, getDocs, onSnapshot, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useAuth } from "../services/authContext";
 // react
@@ -28,15 +28,14 @@ import WaterIcon from "../assets/card-icons/water.png";
 export default function Favorites() {
 	// get user favorites from db
 	const { user } = useAuth();
-	const [favCards, setFavCards] = useState({});
 	const navigate = useNavigate();
+	const [favCards, setFavCards] = useState({});
 
 	useEffect(() => {
 		// if not authenticated
 		if (!user) navigate("/login");
 
 		const favRef = collection(db, "users", user.uid, "favorites");
-
 		// real-time fetch of collection
 		const unsubscribe = onSnapshot(favRef, (snapshot) => {
 			const favs = {};
@@ -47,7 +46,7 @@ export default function Favorites() {
 		});
 
 		return () => unsubscribe();
-	}, [user]);
+	}, [user, navigate]);
 
 	// ui state
 	const [grabbingCard, setGrabbingCard] = useState(null);

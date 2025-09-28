@@ -90,6 +90,40 @@ export const useCardsInfinite = (pageSize = 15, maxPages = 25) => useInfiniteQue
 	cacheTime: Infinity,
 });
 
+// fetch cards by ID
+export const useCardsByIds = (ids = []) => useQuery({
+	queryKey: ["cards-by-ids", ids],
+	queryFn: async () => {
+		if (!ids || ids.length === 0) return [];
+		const foundCards = [];
+		const missingIds = new Set(ids);
+		// check cached infinite pages in localforage
+		const keys = await localforage.keys();
+		const pageKeys = keys.filter((k) => k.startsWith("cards-infinite-"));
+		for (const key of pageKeys) {
+			const pageData = await localforage.getItem(key);
+			if (pageData?.data) {
+				for (const card of pageData.data) {
+					if (missingIds.has(card.id)) {
+						foundCards.push(card);
+						missingIds.delete(card.id);
+					}
+				}
+			}
+		}
+		// fetch uncached cards from API
+		if (missingIds.size > 0) {
+			const query = [...missingIds].map((id) => `"${id}"`).join(",");
+			const res = await api.get(`/cards?q=id:(${query})`);
+			foundCards.push(...res.data.data);
+		}
+		return foundCards;
+	},
+	enabled: ids.length > 0, // don’t run if no ids
+	staleTime: Infinity,
+	cacheTime: Infinity,
+});
+
 // fetch card rarities
 export const useRarities = () => useQuery({
 	queryKey: ["rarities"],

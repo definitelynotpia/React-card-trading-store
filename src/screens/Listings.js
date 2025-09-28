@@ -2,12 +2,12 @@ import "../App.css";
 import "../styles/explore.css";
 // react
 import { playCardFlipSfx } from "../utils/sfx.js";
-import { OverlayTrigger, Tooltip, Accordion, Button } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Accordion } from "react-bootstrap";
 import { CardFront, CardBack } from "../components/card.js";
-import { IoMdArrowBack, IoMdStar } from "react-icons/io";
+import { IoMdStar } from "react-icons/io";
 // routing
-import { use, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 // card type icons
 import DarknessIcon from "../assets/card-icons/dark.png";
 import DragonIcon from "../assets/card-icons/dragon.png";
@@ -20,19 +20,37 @@ import ColorlessIcon from "../assets/card-icons/normal.png";
 import PsychicIcon from "../assets/card-icons/psychic.png";
 import MetalIcon from "../assets/card-icons/steel.png";
 import WaterIcon from "../assets/card-icons/water.png";
+// firebase
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../services/firebase.js";
 
 export default function Listings() {
-	const navigate = useNavigate();
 	const location = useLocation();
-	const card = location.state?.card; // 👈 read card from Link state
 
 	// card info
+	const card = location.state?.card; // read card from Link state
 	const fetchedUsdPrice = card.tcgPlayer?.prices?.holofoil?.market || card.tcgPlayer?.prices?.reverseHolofoil?.market || 0;
 	const fetchedEurPrice = card.cardmarket?.prices.trendPrice;
 	const priceEur = (Math.round(fetchedEurPrice * 100) / 100).toFixed(2); // EUR to PHP manual conversion ?
 	const priceUsd = (Math.round(fetchedUsdPrice * 100) / 100).toFixed(2); // USD to PHP manual conversion ?
 	const convertedEurPrice = (Math.round((fetchedEurPrice * 63) * 100) / 100).toFixed(2); // EUR to PHP manual conversion ?
 	const convertedUsdPrice = (Math.round((fetchedUsdPrice * 51) * 100) / 100).toFixed(2); // USD to PHP manual conversion ?
+
+	// fetch listings
+	const [listings, setListings] = useState([]);
+	useEffect(() => {
+		const fetchListings = async () => {
+			const q = query(
+				collection(db, "products"),
+				where("cardId", "==", card.id)
+			);
+
+			const snapshot = await getDocs(q);
+			const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+			setListings(results);
+		};
+		fetchListings();
+	}, [card.id]);
 
 	// ui state
 	const typeIcons = {
@@ -245,35 +263,67 @@ export default function Listings() {
 			</div> */}
 
 			<div className="listings-table" activeKey={listingActiveKey} onSelect={setListingActiveKey} >
-				{Array.from({ length:7 }, (listing, i) => (
-					<div className="listing-card d-flex flex-row justify-content-between align-items-start">
-						<div className="listing-images me-3">
-							<img src={card.images.small} alt="Proof" className="listing-thumb" />
-							<p className="listing-images-count">10</p>
+				{listings.length === 0 ?
+					Array.from({ length: 4 }, (_, i) => (
+						<div className="listing-card d-flex flex-row justify-content-between align-items-start">
+							<div className="listing-images bg-dark me-3"></div>
 						</div>
-
-						<div className="d-flex flex-column flex-grow-1">
-							<h6 className="listing-title">@listing.seller.username</h6>
-							<p className="seller-username small text-muted">listing.seller.address</p>
-							<p className="seller-description">listing.description</p>
-							<div className="tags d-flex flex-row flex-wrap">
-								tags and certs
+					)) :
+					listings.map(listing => (
+						<div className="listing-card d-flex flex-row justify-content-between align-items-start">
+							<div className="listing-images me-3">
+								<img src={listing.images[0]} alt={listing.title} className="listing-thumb" />
+								{listing.images.length > 1 && <p className="listing-images-count">{listing.images.length}</p>}
 							</div>
+
+							<div className="d-flex flex-column flex-grow-1">
+								<h6 className="listing-title">{listing.title}</h6>
+								<p className="listing-seller">@{listing.sellerUsername}</p>
+								<p className="seller-description">{listing.description}</p>
+
+								<div className="tags d-flex flex-row flex-wrap">
+									{listing.condition}
+									{listing.foil}
+									{listing.language}
+									{listing.packaging}
+									{listing.printing}
+									{listing.quality}
+									{listing.tags.map((tag, i) => (
+										<span key={`${listing.id}-tag-${i}`} className="custom-gradient-badge me-1 my-1">
+											{tag}
+										</span>
+									))}
+								</div>
+							</div>
+
+							<div className="listing-price text-end">
+								<h5 className="fw-bold">₱{listing.price}</h5>
+								<button className="btn btn-primary btn-sm mt-2">Add to Cart</button>
+							</div>
+
 						</div>
-
-						<div className="listing-price text-end">
-							<h5 className="fw-bold">₱listing.price</h5>
-							<button className="btn btn-primary btn-sm mt-2">Add to Cart</button>
-						</div>
-
-					</div>
-
-					// <Accordion.Item eventKey={i}>
-					// 	<Accordion.Header>Listing #{i + 1}</Accordion.Header>
-					// 	<Accordion.Body>Listing #{i + 1}</Accordion.Body>
-					// </Accordion.Item>
-				))}
+					))}
 			</div>
 		</div>
 	</div>);
 }
+
+/*
+{listing.available}
+{listing.cardId}
+{listing.createdAt}
+{listing.description}
+{listing.images}
+{listing.condition}
+{listing.foil}
+{listing.language}
+{listing.packaging}
+{listing.printing}
+{listing.quality}
+{listing.tags}
+{listing.price}
+{listing.qty}
+{listing.sellerId}
+{listing.sellerUsername}
+{listing.title}
+*/

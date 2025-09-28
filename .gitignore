@@ -8,6 +8,11 @@
 # testing
 /coverage
 
+# to populate firestore via service admin account
+/src/services/seed-accounts.json
+/src/services/seed.js
+/src/services/teardown.js
+
 # production
 /build
 

@@ -69,8 +69,7 @@ export default function Login() {
 
     useEffect(() => {
         if (!loading && user) {
-            const username = user.displayName;
-            navigate(`/${username}/profile`);
+            navigate(`/explore`);
         }
     }, [user, loading, navigate]);
 

@@ -5,7 +5,7 @@ import { OverlayTrigger, Tooltip, Pagination, Card, Button } from "react-bootstr
 import { CardFront, CardBack } from "../components/card.js";
 import { useState, useEffect } from "react";
 // routing
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // react-icons
 import { LuChevronFirst, LuChevronLast, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { FaHeart } from "react-icons/fa";
@@ -24,12 +24,13 @@ import PsychicIcon from "../assets/card-icons/psychic.png";
 import MetalIcon from "../assets/card-icons/steel.png";
 import WaterIcon from "../assets/card-icons/water.png";
 import { useAuth } from "../services/authContext.js";
-import { collection, deleteDoc, doc, onSnapshot, setDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../services/firebase.js";
 
 export default function Products() {
+	const navigate = useNavigate();
 	// user
-	const { user, userData } = useAuth();
+	const { user } = useAuth();
 
 	// query first 250 Pokemon cards
 	const pageSize = 15;
@@ -63,7 +64,7 @@ export default function Products() {
 	// ui state
 	const [grabbingCard, setGrabbingCard] = useState(null);
 	const [flippedCards, setFlippedCards] = useState({});
-	const [favCards, setFavCards] = useState({});
+	const [favCards, setFavCards] = useState([]);
 	// map icon to card type
 	const typeIcons = {
 		Colorless: ColorlessIcon,
@@ -88,41 +89,36 @@ export default function Products() {
 
 	// update favorites according to user db
 	useEffect(() => {
-		if (!user) return; // if not logged in, do not fetch
+		// if not logged in, do not fetch
+		if (!user) return;
 		// get list of favorites and update heart icons
-		const favRef = collection(db, "users", user.uid, "favorites");
-		const unsubscribe = onSnapshot(favRef, (snapshot) => {
-			const favs = {};
-			snapshot.forEach((doc) => {
-				favs[doc.id] = doc.data();
-			});
-			setFavCards(favs);
+		const userRef = doc(db, "users", user.uid);
+		const unsubscribe = onSnapshot(userRef, (snapshot) => {
+			const data = snapshot.data();
+			setFavCards(data?.favorites || []);
 		});
-
 		return () => unsubscribe();
 	}, [user]);
 
 	const toggleFav = async (card) => {
-		if (!user) return;
+		if (!user) navigate("/login");
 
-		const favRef = doc(db, "users", user.uid, "favorites", card.id);
-		const isFav = !!favCards[card.id];
+		const userRef = doc(db, "users", user.uid);
+		const isFav = favCards.includes(card.id);
 		if (isFav) {
 			// update local state
-			setFavCards((prev) => {
-				const updated = { ...prev };
-				delete updated[card.id];
-				return updated;
-			});
+			setFavCards((prev) => prev.filter((id) => id !== card.id));
 			// remove from Firestore
-			await deleteDoc(favRef);
-			alert("Removed", card.name, "to Favorites!");
+			await updateDoc(userRef, {
+				favorites: arrayRemove(card.id),
+			});
 		} else {
 			// update local state
-			setFavCards((prev) => ({ ...prev, [card.id]: card }));
+			setFavCards((prev) => [...prev, card.id]);
 			// add to Firestore
-			await setDoc(favRef, card);
-			alert("Added", card.name, "to Favorites!");
+			await updateDoc(userRef, {
+				favorites: arrayUnion(card.id),
+			});
 		}
 	};
 
@@ -294,7 +290,7 @@ export default function Products() {
 							</div>
 
 							<div className="d-flex flex-row justify-content-center align-items-center mt-3 mb-1">
-								{favCards[card.id] ?
+								{favCards.includes(card.id) ?
 									<FaHeart onClick={() => toggleFav(card)} size={28} color="red" /> :
 									<FaHeart onClick={() => toggleFav(card)} size={28} color="#0000003d" />}
 								<Link to={`/explore/${card.id}`} state={{ card }} className="listings w-100 ms-2">

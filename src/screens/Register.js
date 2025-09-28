@@ -7,11 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth, googleProvider, db } from "../services/firebase.js";
 import { createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, signInWithPopup, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { useAuth } from "../services/authContext.js";
 // ui
 import { FiArrowUpRight, FiEye, FiEyeOff, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { Form, Button } from "react-bootstrap";
-import { generateAvatar } from "../utils/avatar.js";
-import { useAuth } from "../services/authContext.js";
 
 export default function Register() {
     const {user, loading} = useAuth();
@@ -61,6 +60,7 @@ export default function Register() {
                 uid: user.uid,
                 email: form.email,
                 username: form.username,
+                displayName: form.username,
                 photoURL: DEFAULT_PROFILE_IMAGE,
                 role: "buyer",
                 createdAt: Date.now(),
@@ -100,8 +100,7 @@ export default function Register() {
 
     useEffect(() => {
         if (!loading && user) {
-            const username = user.displayName;
-            navigate(`/${username}/profile`);
+            navigate(`/explore`);
         }
     }, [user, loading, navigate]);
 

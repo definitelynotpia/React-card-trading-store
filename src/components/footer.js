@@ -1,5 +1,5 @@
 import "../App.css";
-import { ReactComponent as FooterLogo } from "../logo-1.svg";
+import { ReactComponent as FooterLogo } from "../logo-2.svg";
 import * as Icon from 'react-bootstrap-icons';
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";

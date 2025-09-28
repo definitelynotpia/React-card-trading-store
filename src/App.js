@@ -11,7 +11,7 @@ import { useAuth } from "./services/authContext.js";
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
 import CustomFooter from "./components/footer.js";
 // icons
-import { BsCart, BsCartFill, BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsCart, BsCartFill } from "react-icons/bs";
 // App screens
 import Home from "./screens/Home";
 import Explore from './screens/Explore';
@@ -27,21 +27,10 @@ function App() {
   const location = useLocation();
   // check if user authenticated
   const { user, userData } = useAuth();
-
-  // icon ui state
-  const [hoverIcon, setHoverIcon] = useState({});
-  const toggleIcon = (iconId) => {
-    console.log(iconId);
-    setHoverIcon(prev => ({
-      ...prev,
-      [iconId]: !prev[iconId]
-    }));
-    console.log("set icon", iconId, hoverIcon[iconId]);
-  };
   // select pathname
   const atExploreListings = /^\/explore\/[^/]+$/.test(location.pathname);
-  const atFavorites = /^\/[^/]+\/favorites$/.test(location.pathname);
   const atCart = /^\/[^/]+\/cart$/.test(location.pathname);
+  const atProfile = /^\/[^/]+\/profile$/.test(location.pathname);
   const atAuthForms = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/seller/onboarding";
 
   // when page scrolled on Home page, change navbar bg (transparent -> solid divor)
@@ -54,7 +43,7 @@ function App() {
   return (
     <div>
       <Navbar
-        className={`navbar ${navbarBg ? "nav-bg" : ""} m-0 p-0`}
+        className={`navbar ${navbarBg || atProfile ? "nav-bg" : ""} m-0 p-0`}
         expand="lg"
         fixed="top"
       >
@@ -80,17 +69,10 @@ function App() {
           <div className="d-flex justify-content-end align-items-center w-25">
             {user && userData ? <>
               <div className="nav-icon py-2 ms-3">
-                <NavLink to={`${user.displayName}/favorites`}>
-                  {atFavorites ?
-                    <BsHeartFill size={20} /> :
-                    <BsHeart size={20} />}
-                </NavLink>
-              </div>
-              <div className="nav-icon py-2 ms-3">
                 <NavLink to={`${user.displayName}/cart`}>
                   {atCart ?
-                    <BsCartFill size={20} /> :
-                    <BsCart size={20} />}
+                    <BsCartFill size={24} /> :
+                    <BsCart size={24} />}
                 </NavLink>
               </div>
               <Button className="mx-3 rounded-pill outline-btn"><Nav.Link>
@@ -126,22 +108,22 @@ function App() {
           <Route path="/explore/:cardId/listing/:listingId" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">/explore/:cardId/listing/:listingId</p>}></Route>
 
           {/* for user */}
-          <Route path=":userDisplayName/profile" element={<Profile />}></Route>
-          <Route path=":userDisplayName/cart" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:userDisplayName/cart</p>}></Route>
-          <Route path=":userDisplayName/favorites" element={<Favorites />}></Route>
+          <Route path=":username/profile" element={<Profile />}></Route>
+          <Route path=":username/cart" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:username/cart</p>}></Route>
+          <Route path=":username/favorites" element={<Favorites />}></Route>
           <Route path="seller/onboarding" element={<SellerOnboarding />}></Route>
-          <Route path=":userDisplayName/store" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:userDisplayName/store</p>}></Route>
+          <Route path=":username/store" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:username/store</p>}></Route>
 
           {/* services */}
-          <Route path=":userDisplayName/seller/invite-request" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:userDisplayName/seller/invite-request</p>}></Route>
-          <Route path=":userDisplayName/orders/:orderId" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:userDisplayName/orders/:orderId</p>}></Route>
+          <Route path=":username/seller/invite-request" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:username/seller/invite-request</p>}></Route>
+          <Route path=":username/orders/:orderId" element={<p className="my-5 py-5 w-100 d-flex justify-content-center align-items-center">:username/orders/:orderId</p>}></Route>
 
           {/* error */}
           <Route path="*" element={<p>Not found</p>} />
         </Routes>
       </div>
 
-      {!atAuthForms && !atExploreListings && <CustomFooter />}
+      {!atAuthForms && !atExploreListings && !atProfile && <CustomFooter />}
     </div>
   );
 }

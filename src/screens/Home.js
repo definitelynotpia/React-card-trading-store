@@ -8,8 +8,11 @@ import { Link } from "react-router-dom";
 // images
 import Jigglypuff from "../assets/3D_Jigglypuff.webp";
 import Pikachu from "../assets/3D_Pikachu.png";
+import { useAuth } from "../services/authContext";
 
 export default function Home() {
+	const { user } = useAuth();
+
 	return (<>
 		<div className="gradient-bg">
 			<div className="hero-section">
@@ -38,7 +41,7 @@ export default function Home() {
 							<Link to="/explore">
 								<Button variant="dark" className="rounded-pill ms-5">Shop now</Button>
 							</Link>
-							<Link to="/seller/onboarding">
+							<Link to={!user ? "/login" : "/seller/onboarding"}>
 								<Button className="rounded-pill blue-outline-btn ms-3">I want to sell!</Button>
 							</Link>
 						</Col>
